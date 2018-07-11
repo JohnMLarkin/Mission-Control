@@ -7,6 +7,14 @@
 
   <form method="post" action="/register">
     <div class="card-body form-horizontal">
+      {{#if error}}
+        <div class="col-md-12">
+          <div class="alert alert-danger alert-dismissible fade show" role="alert">{{error}}
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </div>
+          </div>
+      {{/if}}
       <div class="form-group col-md-12 row">
         <label class="col-sm-2 control-label" for="username">Username: </label>
         <div class="col-md-10">
@@ -37,7 +45,3 @@
     </div>
   </form>
 </div>
-<p>
-{{#if error}}
-  <div class="alert alert-danger" role="alert">{{error}}</div>
-{{/if}}

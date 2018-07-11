@@ -8,7 +8,7 @@ const Account = new Schema({
   email: String,
   role: {
     type: String,
-    enum: ['super','flightdirector','standard'],
+    enum: ['standard','flightdirector','admin'],
     default: 'standard'
   }
 });

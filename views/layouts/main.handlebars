@@ -1,6 +1,8 @@
 <!DOCTYPE HTML>
 <html lang="en">
 <head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
   <title>Mission Control</title>
   <link href="https://stackpath.bootstrapcdn.com/bootswatch/4.1.1/slate/bootstrap.min.css" rel="stylesheet" integrity="sha384-T5/MPhcu5PtijW3XQzMbwUJshIZS5VzRn+lpMXRN8EnZpxBc8yDYiGkTj7pTWBXQ" crossorigin="anonymous">
   <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.1.0/css/all.css" integrity="sha384-lKuwvrZot6UHsBSfcMvOkWwlCMgc0TaWr+30HWe3a4ltaBwTZhyTEggF5tJv8tbt" crossorigin="anonymous">
@@ -8,13 +10,22 @@
 </head>
 <body>
   <div class="page-header">
-    <div class="container">
-      <div class="col-md-6">
-        <h1><a href="/">Mission Control</a></h1>
+    <div class="container-fluid">
+      <div class="row">
+        <div class="col-md-6">
+          <h1><a href="/">Mission Control</a></h1>
+        </div>
+        <div class="col-sm-6 align-self-center text-right">
+          {{#if user}}
+            {{user.username}} ({{user.role}}) &nbsp; <a href="/logout"><i class="fas fa-sign-out-alt"></i></a>
+          {{else}}
+            <a href="/login"><i class="fas fa-sign-in-alt"></i></a> &nbsp; <a href="/register"><i class="fas fa-user-plus"></i></a>
+          {{/if}}
+        </div>
       </div>
     </div>
   </div>
-  <div class="container">
+  <div class="container-fluid">
     <div class="row">
       <div class="col-sm-12">
         {{{body}}}
@@ -31,7 +42,9 @@
       </div>
     </div>
   </div>
-  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+  <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
   <script type="text/javascript" src="/public/js/scripts.js"></script>
 </body>
 </html>

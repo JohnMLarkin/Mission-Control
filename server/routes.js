@@ -15,12 +15,15 @@ module.exports = (app) => {
   // Authentication-related routes
   router.get('/register', user.register);
   router.post('/register', user.create);
-  router.get('/login', user.loginForm);
-  router.post('/login', passport.authenticate('local', { failureRedirect: '/login' }),
-   function(req, res) {
-     res.redirect('/')
-   });
+  router.get('/login', user.login);
+  router.post('/login', passport.authenticate('local', {
+    successRedirect: '/',
+    failureRedirect: '/login'
+  }));
   router.get('/logout', user.logout);
+  router.get('/secure', user.secure);
+  router.get('/manageUsers', user.manageUsers);
+  router.post('/modifyUser', user.modifyUser);
 
   router.get('/track/:mission_id', track.index);
   app.use(router);

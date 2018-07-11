@@ -4,7 +4,7 @@
 module.exports = {
   index: (req, res) => {
     if (req.user) {
-      res.send(`You are currently logged in as ${req.user.username}`);
+      res.send(`You are currently logged in as ${req.user.username} with ${req.user.role} role`);
     } else {
       res.send('You should login or register');
     }
