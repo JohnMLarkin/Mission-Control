@@ -14,9 +14,11 @@ module.exports = {
       req.body.password,
       (err, account) => {
         if (err) {
-          if (err.name === 'UserExistsError')
-          console.log(err);
-          return res.render('register', {error: err.message});
+          if (err.name === 'UserExistsError') {
+            return res.render('register', {error: `Username ${req.body.username} already exists.`, email: req.body.email});
+          } else {
+            console.log(err);
+          }
         }
         passport.authenticate('local')(req, res, () => {
           req.session.save((err) => {
@@ -34,6 +36,10 @@ module.exports = {
     res.redirect('/');
   },
   login(req, res) {
-    res.send('The login stub');
+    res.render('login', {user: req.user});
+  },
+  secure(req, res) {
+    res.send('This is something that should be secured.');
   }
+
 };

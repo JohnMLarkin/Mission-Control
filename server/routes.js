@@ -15,8 +15,11 @@ module.exports = (app) => {
   // Authentication-related routes
   router.get('/register', user.register);
   router.post('/register', user.create);
-  //router.get('/login', user.loginForm);
-  //router.post('/login' user.login);
+  router.get('/login', user.loginForm);
+  router.post('/login', passport.authenticate('local', { failureRedirect: '/login' }),
+   function(req, res) {
+     res.redirect('/')
+   });
   router.get('/logout', user.logout);
 
   router.get('/track/:mission_id', track.index);
