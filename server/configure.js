@@ -4,22 +4,33 @@ const path = require('path'),
       exphbs = require('express-handlebars'),
       bodyParser = require('body-parser'),
       cookieParser = require('cookie-parser'),
-      morgan = require('morgan'),
+      logger = require('morgan'),
       methodOverride = require('method-override'),
       errorHandler = require('errorhandler'),
       moment = require('moment'),
-      multer = require('multer');
+      multer = require('multer'),
+      passport = require('passport'),
+      LocalStrategy = require('passport-local').Strategy,
+      mongoose = require('mongoose'),
+      session = require('express-session'),
+      favicon = require('serve-favicon');
 
 // Import local scripts
 const routes = require('./routes');
+const secrets = require('./_secrets');
 
 module.exports = (app) => {
-  app.use(morgan('dev'));   // Logs HTTP requests
+  // Provides an icon for use by browsers
+  // app.use(favicon(__dirname + '/public/favicon.ico'));
+
+  // Logs HTTP requests
+  app.use(logger('dev'));
 
   // Add HTML body parsers for incoming requests
   app.use(bodyParser.urlencoded({'extended': true}));
   app.use(bodyParser.json());
 
+  // View engine setup
   app.engine('handlebars', exphbs.create({
     defaultLayout: 'main',
     layoutsDir: `${app.get('views')}/layouts`,
@@ -33,10 +44,26 @@ module.exports = (app) => {
   app.set('view engine','handlebars');
 
   app.use(methodOverride());
-  app.use(cookieParser('MissionControl20180706'));
+  app.use(cookieParser(secrets.cookie));
+
+  // Enable authenticated sessions
+  app.use(session({
+    secret: secrets.cookie,
+    resave: false,
+    saveUninitialized: false
+  }));
+  app.use(passport.initialize());
+  app.use(passport.session());
+
 
   routes(app);
   app.use('/public/', express.static(path.join(__dirname, '../public')));
+
+  // Configure Passport
+  var Account = require('../models/account');
+  passport.use(new LocalStrategy(Account.authenticate()));
+  passport.serializeUser(Account.serializeUser());
+  passport.deserializeUser(Account.deserializeUser());
 
   if ('development' === app.get('env')) {
     app.use(errorHandler());

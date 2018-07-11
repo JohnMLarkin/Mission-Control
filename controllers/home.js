@@ -3,7 +3,11 @@
 
 module.exports = {
   index: (req, res) => {
-    res.send('The home:index controller');
+    if (req.user) {
+      res.send(`You are currently logged in as ${req.user.username}`);
+    } else {
+      res.send('You should login or register');
+    }
   }
   // index: (req, res) => {
   //   const ViewModel = {
