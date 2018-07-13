@@ -33,7 +33,7 @@ const Mission = new Schema({
 })
 
 module.exports = {
-  mongoose.model('PodSchema',PodSchema),
-  mongoose.model('Mission',Mission),
-  podDataTypes
+  'PodSchema': mongoose.model('PodSchema',PodSchema),
+  'Mission': mongoose.model('Mission',Mission),
+  'podDataTypes': podDataTypes
 }

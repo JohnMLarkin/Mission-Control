@@ -6,6 +6,7 @@ const express = require('express'),
 // Import local scripts
 const home = require('../controllers/home'),
       user = require('../controllers/user'),
+      planning = require('../controllers/planning'),
       track = require('../controllers/track'),
       Account = require('../models/account');
 
@@ -24,6 +25,12 @@ module.exports = (app) => {
   router.get('/secure', user.secure);
   router.get('/manageUsers', user.manageUsers);
   router.post('/modifyUser', user.modifyUser);
+
+  // Planning-related routes
+  router.get('/createOrg', planning.showCreateOrg);
+  router.post('/createOrg', planning.createOrg);
+  router.get('/organizationList', planning.organizationList);
+  router.post('/organizationList', planning.organizationList);
 
   router.get('/track/:mission_id', track.index);
   app.use(router);

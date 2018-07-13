@@ -38,6 +38,9 @@ module.exports = (app) => {
     helpers: {
       timeago: (timestamp) => {
         return moment(timestamp).startOf('minute').fromNow();
+      },
+      json: (content) => {
+        return JSON.stringify(content);
       }
     }
   }).engine);

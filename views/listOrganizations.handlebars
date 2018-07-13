@@ -1,0 +1,67 @@
+<div class="row">
+  <div class="col-md-6">
+    <div class="card text-white bg-primary mb-3">
+      <div class="card-header">
+        <h3 class="card-title">
+          Organizations
+        </h3>
+      </div>
+      <div class="card-body form-horizontal">
+        <table class="table">
+          <thead>
+            <tr>
+              <th scope="col">Name</th>
+              <th scope="col">City</th>
+              <th scope="col">State</th>
+            </tr>
+          </thead>
+          <tbody>
+            {{#each organizations}}
+            <tr>
+              <td><div class="form-check">
+                <input class="form-check-input" type="radio" name="orgList" id="org{{@index}}" value="{{@index}}" onchange="selectDetails({{@index}})">
+                <label class="form-check-label" for="org{{@index}}">{{name}}</label>
+              </div></td>
+              <td>{{city}}</td>
+              <td>{{state}}</td>
+            </tr>
+            {{/each}}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+  <div class="col-md-6">
+    <div class="card text-white bg-info mb-3">
+      <h5 class="card-header">
+        Details
+      </h5>
+      <div class="card-body form-horizontal">
+        <h5 class="card-title"><span id="detailOrgName"></span></h5>
+        <p class="card-text"><span id="detailOrgAddress"></span><br>
+          <span id="detailOrgCityStateZip"></span>
+        </p>
+
+        <span id="detailOrgContactName"></span>
+        <span id="detailOrgContactEmail"></span><br>
+        <span id="detailOrgContactUrl"></span>
+
+      </div>
+    </div>
+  </div>
+</div>
+<script>
+function selectDetails(i) {
+  var organizations = {{{json organizations}}};
+  document.getElementById('detailOrgName').innerHTML=organizations[i].name;
+  if (organizations[i].address2) {
+    document.getElementById('detailOrgAddress').innerHTML=organizations[i].address1 + '<br>' + organizations[i].address2;
+  } else {
+    document.getElementById('detailOrgAddress').innerHTML=organizations[i].address1;
+  }
+  document.getElementById('detailOrgCityStateZip').innerHTML = organizations[i].city + ', ' + organizations[i].state + ' ' + organizations[i].zipcode;
+  document.getElementById('detailOrgContactName').innerHTML = '<h6>Contact:</h6>' + '<p class="card-text">' + organizations[i].contactName;
+  document.getElementById('detailOrgContactEmail').innerHTML = organizations[i].contactEmail;
+  document.getElementById('detailOrgContactUrl').innerHTML = organizations[i].url + '</p>';
+}
+</script>
