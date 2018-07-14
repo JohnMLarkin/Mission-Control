@@ -142,5 +142,29 @@ module.exports = {
       ViewModel.mission.launchCode = null;
     }
     res.render('missionOverview', ViewModel);
+  },
+  manageMissions(req, res) {
+    if (accessControl.onlyAdmin(req)) {
+      const ViewModel = {
+        user: req.user,
+        missions: [],
+        organizations: []
+      };
+      Organization.find({}, {}, {}, (err, organizations) => {
+        ViewModel.organizations = organizations;
+        orgDict = {};
+        for (i=0; i<organizations.length; i++) {
+          orgDict[organizations[i]._id] = organizations[i].name;
+        }
+        Mission.find({}, {}, {sort: {launchDate: -1}}, (err, missions) => {
+          ViewModel.missions = missions;
+          for (i=0; i<missions.length; i++) {
+            ViewModel.missions[i].formattedLaunchDate = missions[i].launchDate.toDateString();
+            ViewModel.missions[i].orgName = orgDict[missions[i].organizationID];
+          }
+          res.render('manageMissions', ViewModel);
+        });
+      });
+    }
   }
 }
