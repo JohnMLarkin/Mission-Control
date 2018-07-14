@@ -1,17 +1,24 @@
 const passport = require('passport'),
       express = require('express'),
-      router = express.Router();
+      router = express.Router(),
+      randomString = require('randomatic');
 
 const Organization = require('../models/organization'),
-      Mission = require('../models/mission'),
+      Mission = require('../models/mission').Mission,
+      PodSchema = require('../models/mission').PodSchema,
+      podDataTypes = require('../models/mission').podDataTypes,
       accessControl = require('../helpers/accessControl');
 
 module.exports = {
   showCreateOrg(req, res) {
-    const ViewModel = {
-      user: req.user
-    };
-    res.render('createOrganization', ViewModel);
+    if (accessControl.onlyAdmin(req)) {
+      const ViewModel = {
+        user: req.user
+      };
+      res.render('createOrganization', ViewModel);
+    } else {
+      res.redirect('/login');
+    }
   },
   createOrg(req, res) {
     if (accessControl.onlyAdmin(req)) {
@@ -59,30 +66,81 @@ module.exports = {
     const ViewModel = {
       user: req.user,
       organizations: [],
-      selectedOrg: 0
     };
-    if (req.body.orgList) {
-      ViewModel.selectedOrg = req.body.orgList.value;
-    }
     Organization.find({}, {}, {sort: {name: 1}}, (err, organizations) => {
       if (err) {throw err};
-      for (i = 0; i < organizations.length; i++) {
-        ViewModel.organizations[i] = {
-          name: organizations[i].name,
-          address1: organizations[i].address1,
-          address2: organizations[i].address2,
-          city: organizations[i].city,
-          state: organizations[i].state,
-          zipcode: organizations[i].zipcode,
-          contactName: organizations[i].contactName,
-          contactEmail: organizations[i].contactEmail,
-          url: organizations[i].url,
-          isSelected: (i==ViewModel.selectedOrg)
-        };
-      }
-      console.log(ViewModel);
-      ViewModel.detailOrg = organizations[ViewModel.selectedOrg];
+      ViewModel.organizations = organizations;
       res.render('listOrganizations', ViewModel);
     });
+  },
+  createMission(req, res) {
+    if (accessControl.flightDirectorOrAdmin(req)) {
+      const ViewModel = {
+        user: req.user,
+        organizations: []
+      };
+      Organization.find({}, {}, {sort: {name: 1}}, (err, organizations) => {
+        if (err) {throw err};
+        ViewModel.organizations = organizations;
+        res.render('createMission', ViewModel);
+      });
+    } else {
+      res.redirect('/login');
+    }
+  },
+  addMission(req, res) {
+    if (accessControl.flightDirectorOrAdmin(req)) {
+      const ViewModel = {
+        user: req.user
+      };
+      Mission.find({}, {}, {sort: {missionID: -1}}, (err, missions) => {
+        if (err) {
+          console.log('Error on Mission.find query');
+          console.log(err);
+        }
+        console.log(req.body);
+        var newMissionID;
+        if (missions.length > 0) {
+          newMissionID = missions[0].missionID + 1;
+        } else {
+          newMissionID = 1;
+        }
+        Organization.findOne({_id: req.body.organization},
+          (err, organization) => {
+            if (err) {
+              console.log('Error on Organization.findOne query');
+              console.log(err);
+            }
+            var newMission = new Mission({
+              missionID: newMissionID,
+              launchCode: randomString('a', 4),
+              description: req.body.missionDescription,
+              organizationID: organization._id,
+              launchDate: req.body.predictedLaunchDate
+            });
+            newMission.save((err, mission) => {
+              ViewModel.mission = mission;
+              ViewModel.organization = organization;
+              ViewModel.formattedLaunchDate = mission.launchDate.toDateString() + ' (tentative)';
+              req.session.missionOverviewData = ViewModel;
+              res.redirect('/missionOverview');
+            });
+        });
+      });
+    } else {
+      res.redirect('/login');
+    }
+  },
+  missionOverview(req, res) {
+    if (req.session.missionOverviewData) {
+      ViewModel = req.session.missionOverviewData;
+      req.session.missionOverviewData = null;
+    } else {
+      console.log('Something else but what?');
+    }
+    if (!accessControl.flightDirectorOrAdmin(req)) {
+      ViewModel.mission.launchCode = null;
+    }
+    res.render('missionOverview', ViewModel);
   }
 }

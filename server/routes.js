@@ -31,6 +31,9 @@ module.exports = (app) => {
   router.post('/createOrg', planning.createOrg);
   router.get('/organizationList', planning.organizationList);
   router.post('/organizationList', planning.organizationList);
+  router.get('/createMission', planning.createMission);
+  router.post('/addMission', planning.addMission);
+  router.get('/missionOverview', planning.missionOverview);
 
   router.get('/track/:mission_id', track.index);
   app.use(router);

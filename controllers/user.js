@@ -51,7 +51,7 @@ module.exports = {
         user: req.user,
         accounts: []
       };
-      Account.find({}, {}, {sort: {username: 1}}, (err, accounts) => {
+      Account.find({username: {$ne: req.user.username}}, {}, {sort: {username: 1}}, (err, accounts) => {
         if (err) {throw err};
         ViewModel.accounts = accounts;
         res.render('manageUsers', ViewModel);

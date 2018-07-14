@@ -17,14 +17,14 @@
         <tbody>
           <div class="form-group">
             {{#each accounts}}
-            <tr>
-              <td><div class="form-check">
-                <input class="form-check-input" type="radio" name="userList" id="{{username}}Radio" value="{{username}}">
-                <label class="form-check-label" for="{{username}}Radio">{{username}}</label>
-              </div></td>
-              <td>{{email}}</td>
-              <td>{{role}}</td>
-            </tr>
+                <tr>
+                  <td><div class="form-check">
+                    <input class="form-check-input" type="radio" name="userList" id="{{username}}Radio" value="{{username}}" required>
+                    <label class="form-check-label" for="{{username}}Radio">{{username}}</label>
+                  </div></td>
+                  <td>{{email}}</td>
+                  <td>{{role}}</td>
+                </tr>
             {{/each}}
           </div>
         </tbody>

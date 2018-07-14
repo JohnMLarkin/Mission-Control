@@ -1,0 +1,19 @@
+<div class="card text-white bg-info mb-3">
+  <div class="card-header">
+    <h3 class="card-title">
+      Mission Overview
+    </h3>
+  </div>
+  <div class="card-body form-horizontal">
+    <h5 class="card-title">Mission {{mission.missionID}}</h5>
+    <div class="card-text">
+      <dl>
+        <dt>Description</dt> <dd>{{mission.description}}</dd>
+        <dt>Organization</dt> <dd>{{organization.name}} ({{organization.city}}, {{organization.state}})</dd>
+        <dt>Status</dt> <dd>{{mission.status}}</dd>
+        <dt>Launch Date</dt> <dd>{{formattedLaunchDate}}</dd>
+        <dt>Launch Code</dt> <dd>{{mission.launchCode}}</dd>
+      </dl>
+    </div>
+  </div>
+</div>
