@@ -11,20 +11,16 @@ const Organization = require('../models/organization'),
 
 module.exports = {
   showCreateOrg(req, res) {
+    var ViewModel = accessControl.navBarSupport(req.user);
     if (accessControl.onlyAdmin(req)) {
-      const ViewModel = {
-        user: req.user
-      };
       res.render('createOrganization', ViewModel);
     } else {
       res.redirect('/login');
     }
   },
   createOrg(req, res) {
+    var ViewModel = accessControl.navBarSupport(req.user);
     if (accessControl.onlyAdmin(req)) {
-      const ViewModel = {
-        user: req.user
-      };
       if (req.body.orgName) {
         Organization.findOne({name: {$regex: req.body.orgName}},
           (err, organization) => {
@@ -63,10 +59,8 @@ module.exports = {
     }
   },
   organizationList(req, res) {
-    const ViewModel = {
-      user: req.user,
-      organizations: [],
-    };
+    var ViewModel = accessControl.navBarSupport(req.user);
+    ViewModel.organizations = [];
     Organization.find({}, {}, {sort: {name: 1}}, (err, organizations) => {
       if (err) {throw err};
       ViewModel.organizations = organizations;
@@ -74,11 +68,9 @@ module.exports = {
     });
   },
   createMission(req, res) {
+    var ViewModel = accessControl.navBarSupport(req.user);
     if (accessControl.flightDirectorOrAdmin(req)) {
-      const ViewModel = {
-        user: req.user,
-        organizations: []
-      };
+      ViewModel.organizations = [];
       Organization.find({}, {}, {sort: {name: 1}}, (err, organizations) => {
         if (err) {throw err};
         ViewModel.organizations = organizations;
@@ -91,10 +83,8 @@ module.exports = {
     }
   },
   addMission(req, res) {
+    var ViewModel = accessControl.navBarSupport(req.user);
     if (accessControl.flightDirectorOrAdmin(req)) {
-      const ViewModel = {
-        user: req.user
-      };
       Mission.find({}, {}, {sort: {missionID: -1}}, (err, missions) => {
         if (err) {
           console.log('Error on Mission.find query');
@@ -135,10 +125,10 @@ module.exports = {
   },
   missionOverview(req, res) {
     if (req.session.missionOverviewData) {
-      ViewModel = req.session.missionOverviewData;
+      var ViewModel = req.session.missionOverviewData;
       req.session.missionOverviewData = null;
     } else {
-      console.log('Something else but what?');
+      var ViewModel = accessControl.navBarSupport(req.user);
     }
     if (!accessControl.flightDirectorOrAdmin(req)) {
       ViewModel.mission.launchCode = null;
@@ -146,12 +136,10 @@ module.exports = {
     res.render('missionOverview', ViewModel);
   },
   manageMissions(req, res) {
+    var ViewModel = accessControl.navBarSupport(req.user);
     if (accessControl.onlyAdmin(req)) {
-      const ViewModel = {
-        user: req.user,
-        missions: [],
-        organizations: []
-      };
+      ViewModel.missions = [];
+      ViewModel.organizations = [];
       Organization.find({}, {}, {sort: {name: 1}}, (err, organizations) => {
         ViewModel.organizations = organizations;
         orgDict = {};
@@ -160,10 +148,13 @@ module.exports = {
         }
         Mission.find({}, {}, {sort: {launchDate: -1}}, (err, missions) => {
           ViewModel.missions = missions;
+          dictMissionDescription = {};
           for (i=0; i<missions.length; i++) {
             ViewModel.missions[i].formattedLaunchDate = missions[i].launchDate.toISOString().substring(0, 10);
             ViewModel.missions[i].orgName = orgDict[missions[i].organizationID];
+            dictMissionDescription[String(missions[i]._id)] = missions[i].description;
           }
+          ViewModel.dictMissionDescription = dictMissionDescription;
           ViewModel.manageMissionsJS = true;
           ViewModel.usesDatePicker = true;
           ViewModel.usesDataTable = true;
@@ -175,32 +166,43 @@ module.exports = {
   modifyMission(req, res) {
     if (accessControl.flightDirectorOrAdmin(req)) {
       if (req.body.selectedMission) {
+        var deleteAllowed = false;
         Mission.findById(req.body.selectedMission,
           (err, mission) => {
             if (err) {console.log(err);}
             if (mission) {
-              switch (req.body.missionActionSelect) {
-                case 'Change status':
-                  mission.status = req.body.statusSelect;
-                  break;
-                case 'Change organization':
-                  mission.organizationID = req.body.organization;
-                  break;
-                case 'Change planned launch date':
-                  console.log('Not implemented yet');
-                  break;
-                case 'Delete mission':
-                  console.log('Not implemented yet');
-                  break;
-                default:
-                  console.log('Should not get here...');
-              }
-              mission.save((err) => {
-                if (err) {
-                  console.log(err);
+              if (mission.launchCode === req.body.confirmAction) {
+                switch (req.body.missionActionSelect) {
+                  case 'Change status':
+                    mission.status = req.body.statusSelect;
+                    break;
+                  case 'Change organization':
+                    mission.organizationID = req.body.organization;
+                    break;
+                  case 'Change planned launch date':
+                    mission.launchDate = req.body.predictedLaunchDate
+                    break;
+                  case 'Delete mission':
+                    if (mission.status === 'planned') {
+                      deleteAllowed = true;
+                    }
+                    break;
+                  default:
+                    console.log('Should not get here...');
                 }
-              });
-              res.redirect('/manageMissions');
+                if (deleteAllowed) {
+                  Mission.deleteOne({_id: req.body.selectedMission}, function (err) {});
+                } else {
+                  mission.save((err) => {
+                    if (err) {
+                      console.log(err);
+                    }
+                  });
+                }
+                res.redirect('/manageMissions');
+              } else {
+                console.log('Launch code does not match');
+              }
             }
           }
         );

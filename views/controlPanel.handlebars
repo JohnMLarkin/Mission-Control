@@ -1,0 +1,35 @@
+<div class="row">
+  <div class="col-md-6">
+    <div class="card text-white bg-primary mb-3">
+      <div class="card-header">
+        <h5 class="card-title">
+          Mission Planning
+        </h5>
+      </div>
+      <div class="card-body form-horizontal">
+        {{#if flightDirectorOrAdmin}}
+          <a class="btn btn-primary" href="/createMission" role="button">Create mission</a>
+          <a class="btn btn-primary" href="/manageMissions" role="button">Manage missions</a>
+        {{/if}}
+      </div>
+    </div>
+  </div>
+  <div class="col-md-6">
+    <div class="card text-white bg-primary mb-3">
+      <div class="card-header">
+        <h5 class="card-title">
+          Users and Organizations
+        </h5>
+      </div>
+      <div class="card-body form-horizontal">
+        {{#if flightDirectorOrAdmin}}
+          <a class="btn btn-primary" href="/organizationList" role="button">List organizations</a>
+        {{/if}}
+        {{#if isAdmin}}
+          <a class="btn btn-secondary" href="/manageUsers" role="button">Manage users</a>
+          <a class="btn btn-secondary" href="/createOrg" role="button">Create organization</a>
+        {{/if}}
+      </div>
+    </div>
+  </div>
+</div>

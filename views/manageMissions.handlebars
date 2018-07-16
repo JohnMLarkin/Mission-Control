@@ -6,31 +6,34 @@
   </div>
   <form method="post" action="/modifyMission">
     <div class="card-body form-horizontal">
-      <table id="missionTable" class="display table-hover" style="width: 100%">
-        <thead>
-          <tr>
-            <th scope="col">ID</th>
-            <th scope="col">Organization</th>
-            <th scope="col">Date</th>
-            <th scope="col">Status</th>
-            <th scope="col">Launch Code</th>
-          </tr>
-        </thead>
-        <tbody>
-          <div class="form-group">
-            {{#each missions}}
-                <tr id={{_id}}>
-                  <td>{{missionID}}</label>
-                  </div></td>
-                  <td>{{orgName}}</td>
-                  <td>{{formattedLaunchDate}}</td>
-                  <td>{{status}}</td>
-                  <td>{{launchCode}}</td>
-                </tr>
-            {{/each}}
-          </div>
-        </tbody>
-      </table>
+      <div class="col-md-12">
+        <table id="missionTable" class="display table-hover" style="width: 100%">
+          <thead>
+            <tr>
+              <th scope="col">ID</th>
+              <th scope="col">Status</th>
+              <th scope="col">Organization</th>
+              <th scope="col">Date</th>
+              <th scope="col">Description</th>
+              <th scope="col">Launch Code</th>
+            </tr>
+          </thead>
+          <tbody>
+            <div class="form-group">
+              {{#each missions}}
+                  <tr id={{_id}}>
+                    <td>{{missionID}}</td>
+                    <td>{{status}}</td>
+                    <td>{{orgName}}</td>
+                    <td>{{formattedLaunchDate}}</td>
+                    <td>{{description}}</td>
+                    <td>{{launchCode}}</td>
+                  </tr>
+              {{/each}}
+            </div>
+          </tbody>
+        </table>
+      </div>
     </div>
     <div class="card-footer form-horizontal">
       <div class="form-group col-md-12">
@@ -42,6 +45,7 @@
           <select class="form-control" id="missionActionSelect" name="missionActionSelect">
             <option>None</option>
             <option>Change status</option>
+            <option>Change description</option>
             <option>Change organization</option>
             <option>Change planned launch date</option>
             <option>Delete mission</option>
@@ -77,7 +81,7 @@
       <div class="form-group col-md-12 row align-items-end" id="modifyMissionButtons">
         <div class="col-md-6">
           <label for="confirmAction">Confirm action by entering launch code</label>
-          <input class="form-control" type="text" name="confirmAction">
+          <input class="form-control" type="text" name="confirmAction" autocomplete="off">
         </div>
         <div class="col-md-6 text-right">
           <button type="submit" class="btn btn-success btn-default">OK</button> &nbsp;

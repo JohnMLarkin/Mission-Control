@@ -22,7 +22,6 @@ module.exports = (app) => {
     failureRedirect: '/login'
   }));
   router.get('/logout', user.logout);
-  router.get('/secure', user.secure);
   router.get('/manageUsers', user.manageUsers);
   router.post('/modifyUser', user.modifyUser);
 
@@ -36,6 +35,9 @@ module.exports = (app) => {
   router.get('/missionOverview', planning.missionOverview);
   router.get('/manageMissions', planning.manageMissions);
   router.post('/modifyMission', planning.modifyMission);
+
+  // Navigation-related routes
+  router.get('/controlPanel', home.controlPanel);
 
   router.get('/track/:mission_id', track.index);
   app.use(router);

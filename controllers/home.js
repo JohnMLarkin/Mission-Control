@@ -1,12 +1,19 @@
+const accessControl = require('../helpers/accessControl');
+
 // const homeSidebar = require('../helpers/homeSidebar'),
 //       MissionModel = require('../models').Mission;
 
 module.exports = {
-  index: (req, res) => {
-    if (req.user) {
-      res.send(`You are currently logged in as ${req.user.username} with ${req.user.role} role`);
+  index(req, res) {
+    var ViewModel = accessControl.navBarSupport(req.user);
+    res.render('home', ViewModel);
+  },
+  controlPanel(req, res) {
+    var ViewModel = accessControl.navBarSupport(req.user);
+    if (accessControl.flightDirectorOrAdmin(req)) {
+      res.render('controlPanel', ViewModel);
     } else {
-      res.send('You should login or register');
+      res.redirect('/');
     }
   }
   // index: (req, res) => {

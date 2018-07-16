@@ -23,6 +23,12 @@ $(function() {
         $('#modify-launch-date').show();
         $('#modifyMissionButtons').show();
         break;
+      case 'Delete mission':
+        $('#modify-status').hide();
+        $('#modify-organization').hide();
+        $('#modify-launch-date').hide();
+        $('#modifyMissionButtons').show();
+        break;
       default:
         $('#modify-status').hide();
         $('#modify-organization').hide();
@@ -48,10 +54,32 @@ $(document).ready(function() {
       "stripeClasses": ['table-default', 'table-active'],
       select: {
         style: 'single',
-      }
+      },
+      "info": false,
+      "order": [[ 3, "desc" ]]
     });
 
     table.on('select', function(e, dt, type, indexes) {
-      document.getElementById('selectedMission').value = table.rows( indexes ).data()[0].DT_RowId;
+      var selRow = table.rows( indexes ).data()[0]
+      document.getElementById('selectedMission').value = selRow.DT_RowId;
+      switch (selRow[1]) {
+        case 'planned':
+          document.getElementById('missionActionSelect').options[2].disabled = false;
+          document.getElementById('missionActionSelect').options[3].disabled = false;
+          document.getElementById('missionActionSelect').options[4].disabled = false;
+          document.getElementById('missionActionSelect').options[5].disabled = false;
+          break;
+        case 'active':
+          document.getElementById('missionActionSelect').options[2].disabled = true;
+          document.getElementById('missionActionSelect').options[3].disabled = true;
+          document.getElementById('missionActionSelect').options[4].disabled = false;
+          document.getElementById('missionActionSelect').options[5].disabled = true;
+          break;
+        default:
+          document.getElementById('missionActionSelect').options[2].disabled = true;
+          document.getElementById('missionActionSelect').options[3].disabled = true;
+          document.getElementById('missionActionSelect').options[4].disabled = true;
+          document.getElementById('missionActionSelect').options[5].disabled = true;
+      }
     });
 } );

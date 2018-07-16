@@ -7,9 +7,7 @@ const Account = require('../models/account'),
 
 module.exports = {
   register(req, res) {
-    const ViewModel = {
-      user: req.user
-    };
+    var ViewModel = accessControl.navBarSupport(req.user);
     res.render('register', ViewModel);
   },
   create(req, res) {
@@ -40,17 +38,13 @@ module.exports = {
     res.redirect('/');
   },
   login(req, res) {
-    const ViewModel = {
-      user: req.user
-    };
+    var ViewModel = accessControl.navBarSupport(req.user);
     res.render('login', ViewModel);
   },
   manageUsers(req, res) {
+    var ViewModel = accessControl.navBarSupport(req.user);
     if (accessControl.onlyAdmin(req)) {
-      const ViewModel = {
-        user: req.user,
-        accounts: []
-      };
+      ViewModel.accounts = [];
       Account.find({username: {$ne: req.user.username}}, {}, {sort: {username: 1}}, (err, accounts) => {
         if (err) {throw err};
         ViewModel.accounts = accounts;
@@ -85,15 +79,6 @@ module.exports = {
       )}
     } else {
       res.redirect('/login');
-    }
-  },
-  secure(req, res) {
-    if (!req.user) {
-      return res.redirect('/login');
-    } else if ((req.user.role === 'flightdirector') || (req.user.role === 'admin')) {
-      return res.send(`This is something that should be secured. User ${req.user.username} has ${req.user.role} role.`);
-    } else {
-      return res.send('Access denied. You are not authorized for this resource.');
     }
   }
 };
