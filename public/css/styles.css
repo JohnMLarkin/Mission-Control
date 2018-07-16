@@ -10,3 +10,9 @@ body {
   margin-top: auto;
   flex-shrink: 0;
 }
+.table-hover .table-active:hover {
+  background-color: rgba(0,0,255,0.1);
+}
+.table-hover tbody tr:hover {
+  background-color: rgba(0,0,255,0.1);
+}

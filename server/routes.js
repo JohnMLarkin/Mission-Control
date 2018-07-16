@@ -35,6 +35,7 @@ module.exports = (app) => {
   router.post('/addMission', planning.addMission);
   router.get('/missionOverview', planning.missionOverview);
   router.get('/manageMissions', planning.manageMissions);
+  router.post('/modifyMission', planning.modifyMission);
 
   router.get('/track/:mission_id', track.index);
   app.use(router);

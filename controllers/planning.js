@@ -82,6 +82,8 @@ module.exports = {
       Organization.find({}, {}, {sort: {name: 1}}, (err, organizations) => {
         if (err) {throw err};
         ViewModel.organizations = organizations;
+        ViewModel.createMissionJS = true;
+        ViewModel.usesDatePicker = true;
         res.render('createMission', ViewModel);
       });
     } else {
@@ -150,7 +152,7 @@ module.exports = {
         missions: [],
         organizations: []
       };
-      Organization.find({}, {}, {}, (err, organizations) => {
+      Organization.find({}, {}, {sort: {name: 1}}, (err, organizations) => {
         ViewModel.organizations = organizations;
         orgDict = {};
         for (i=0; i<organizations.length; i++) {
@@ -159,12 +161,54 @@ module.exports = {
         Mission.find({}, {}, {sort: {launchDate: -1}}, (err, missions) => {
           ViewModel.missions = missions;
           for (i=0; i<missions.length; i++) {
-            ViewModel.missions[i].formattedLaunchDate = missions[i].launchDate.toDateString();
+            ViewModel.missions[i].formattedLaunchDate = missions[i].launchDate.toISOString().substring(0, 10);
             ViewModel.missions[i].orgName = orgDict[missions[i].organizationID];
           }
+          ViewModel.manageMissionsJS = true;
+          ViewModel.usesDatePicker = true;
+          ViewModel.usesDataTable = true;
           res.render('manageMissions', ViewModel);
         });
       });
+    }
+  },
+  modifyMission(req, res) {
+    if (accessControl.flightDirectorOrAdmin(req)) {
+      if (req.body.selectedMission) {
+        Mission.findById(req.body.selectedMission,
+          (err, mission) => {
+            if (err) {console.log(err);}
+            if (mission) {
+              switch (req.body.missionActionSelect) {
+                case 'Change status':
+                  mission.status = req.body.statusSelect;
+                  break;
+                case 'Change organization':
+                  mission.organizationID = req.body.organization;
+                  break;
+                case 'Change planned launch date':
+                  console.log('Not implemented yet');
+                  break;
+                case 'Delete mission':
+                  console.log('Not implemented yet');
+                  break;
+                default:
+                  console.log('Should not get here...');
+              }
+              mission.save((err) => {
+                if (err) {
+                  console.log(err);
+                }
+              });
+              res.redirect('/manageMissions');
+            }
+          }
+        );
+      } else {
+        res.redirect('/');
+      }
+    } else {
+      res.redirect('/');
     }
   }
 }
