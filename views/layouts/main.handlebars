@@ -64,6 +64,9 @@
   {{#if usesDatePicker}}
     <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.8.0/js/bootstrap-datepicker.min.js"></script>
   {{/if}}
+  {{#if usesSockets}}
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.1.1/socket.io.js"></script>
+  {{/if}}
   {{#if manageUsersJS}}
     <script type="text/javascript" src="/public/js/manageUsers.js"></script>
   {{/if}}
@@ -72,6 +75,12 @@
   {{/if}}
   {{#if manageMissionsJS}}
     <script type="text/javascript" src="/public/js/manageMissions.js"></script>
+  {{/if}}
+  {{#if trackJS}}
+      <script type="text/javascript" src="/public/js/track.js"></script>
+  {{/if}}
+  {{#if usesGoogleMaps}}
+    <script async defer src="https://maps.googleapis.com/maps/api/js?key={{GoogleMapsKey}}&callback=initMap"></script>
   {{/if}}
 </body>
 </html>

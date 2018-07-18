@@ -1,0 +1,43 @@
+<div class="container-fluid" style="padding:0; margin:0">
+  <div class="row">
+    <div class="col-md-9">
+      <div id="map" style="width:100%; height: 100vh;"></div>
+    </div>
+    <div class="col-md-3">
+      <h5>Mission {{missionID}}</h5>
+      <ul class="list-group">
+        <li class="list-group-item d-flex justify-content-between align-items-center" style="color: #fff;" id="gpsLockIndicator">
+          GPS Lock
+          <span class="badge"><i id="gpsLockIcon" class="fas fa-question"></i></span>
+        </li>
+        <li class="list-group-item d-flex justify-content-between align-items-center" style="color: #fff;">
+          Altitude (m)
+          <span class="text" id="altitudeIndicator">&mdash;</span>
+        </li>
+        <li class="list-group-item d-flex justify-content-between align-items-center" style="color: #fff;">
+          Vertical Vel. (m/s)
+          <span class="text" id="verticalVelocityIndicator"></span>
+        </li>
+        <li class="list-group-item d-flex justify-content-between align-items-center" style="color: #fff;">
+          Heading (&deg;)
+          <span class="text" id="headingIndicator"></span>
+        </li>
+        <li class="list-group-item d-flex justify-content-between align-items-center" style="color: #fff;">
+          External Temp. (&deg; C)
+          <span class="text" id="extTempIndicator"></span>
+        </li>
+        <li class="list-group-item d-flex justify-content-between align-items-center" style="color: #fff;">
+          Command Voltage (V)
+          <span class="text" id="cmdVoltageIndicator"></span>
+        </li>
+        <li class="list-group-item d-flex justify-content-between align-items-center" style="color: #fff;">
+          Last Updated
+          <span class="text" id="lastUpdateIndicator"></span>
+        </li>
+      </ul>
+      <hr>
+
+      <button class="btn btn-primary" onclick="getMyLocation()">Show me</button>
+    </div>
+  </div>
+</div>

@@ -16,3 +16,27 @@ body {
 .table-hover tbody tr:hover {
   background-color: rgba(0,0,255,0.1);
 }
+
+.list-group-item:hover, .list-group-item:focus {
+  background-color: #5bc0de;
+}
+
+.list-group-item-success {
+  background-color: #62c462;
+}
+
+.list-group-item-success:hover, .list-group-item-success:focus {
+  background-color: #62c462;
+}
+
+.list-group-item-danger {
+  background-color: #ee5f5b;
+}
+
+.list-group-item-danger:hover, .list-group-item-danger:focus {
+  background-color: #ee5f5b;
+}
+
+.list-group-item-info {
+  background-color: #5bc0de;
+}
