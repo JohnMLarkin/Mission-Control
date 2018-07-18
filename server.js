@@ -1,18 +1,20 @@
 // Import necessary Node packages
 const express = require('express'),
       mongoose = require('mongoose'),
-      socketio = require('socket.io');
+      socketio = require('socket.io'),
+      fs = require('fs'),
+      watch = require('watch');
 
 const secrets = require('./server/_secrets');
 
-// Configure the express web server
+// Configure the express server
 const config = require('./server/configure');
 let app = express();
 app.set('port', process.env.PORT || 3300);
 app.set('views', `${__dirname}/views`);
 app = config(app);
 
-// Mongooes (MongoDB interface) started
+// Mongoose (MongoDB interface) start up
 const uri = `mongodb+srv://${secrets.mongodb.username}:${secrets.mongodb.password}@cluster0-rv1vo.mongodb.net/test?retryWrites=true`;
 mongoose.connect(uri);
 mongoose.connection.on('open', () => {
@@ -25,14 +27,15 @@ const server = app.listen(app.get('port'), () => {
   console.log(`Local server up: http://localhost:${app.get('port')}`);
 });
 
-// Start the sockets service
+/********************************************************
+  Socket service for pushing data updates to browser
+********************************************************/
 let timerId = null;  // for testing only
 let sockets = new Set();
 var io = socketio(server);
 
 io.on('connection', (socket) => {
   sockets.add(socket);
-  console.log(`Socket ${socket.id} added`);
 
   // for testing only
   if (!timerId) {
@@ -40,18 +43,16 @@ io.on('connection', (socket) => {
   }
 
   socket.on('disconnect', () => {
-    console.log(`Delecting socket ${socket.id}`);
     sockets.delete(socket);
-    console.log(`${sockets.size} sockets remaining`);
   });
 
   socket.on('follow mission', (id) => {
-    console.log(`Request to follow mission ${id} received`);
     socket.missionID = id;
   });
 });
 
 // For socket testing only
+// Deployed version will call on incoming SBD message
 var fakeLng = -118;
 var fakeAlt = 0;
 
@@ -60,7 +61,6 @@ function startTimer() {
     if (!sockets.size) {
       clearInterval(timerId);
       timerId = null;
-      console.log('Timer stopped');
       fakeLng = -118;
       fakeAlt = 0;
     }
@@ -83,3 +83,14 @@ function startTimer() {
     fakeAlt = fakeAlt + 30;
   }, 6000)
 }
+
+/********************************************************
+  File system monitor for incoming SBD messages
+********************************************************/
+watch.createMonitor('./sbd/incoming', { interval: 30 },
+  function(monitor) {
+    monitor.on("created", function (f, stat) {
+      console.log(f + " created");
+    });
+  }
+);
