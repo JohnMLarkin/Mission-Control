@@ -46,6 +46,7 @@ io.on('connection', (socket) => {
   });
 
   socket.on('follow mission', (id) => {
+    console.log(`Request to follow mission ${id} received`);
     socket.missionID = id;
   });
 });
@@ -66,14 +67,17 @@ function startTimer() {
 
     var fakeLat = 0.5*Math.sin(fakeLng) + 47.0;
     var fakeTime = Date.now();
+    var fakeMissionID = 1;
     for (const s of sockets) {
-      s.emit('waypoint', {
-        lat: fakeLat,
-        lng: fakeLng,
-        isGPSlocked: (fakeLat>47),
-        alt: fakeAlt,
-        updateTime: fakeTime
-      });
+      if (s.missionID == fakeMissionID) {
+        s.emit('waypoint', {
+          lat: fakeLat,
+          lng: fakeLng,
+          isGPSlocked: (fakeLat>47),
+          alt: fakeAlt,
+          updateTime: fakeTime
+        });
+      }
     }
     fakeLng = fakeLng + 0.05;
     fakeAlt = fakeAlt + 30;

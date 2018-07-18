@@ -61,7 +61,7 @@
         </div>
         <div class="col-md-6" id="modify-organization">
           <label class="control-label" for="organization">Organization</label>
-          <select class="form-control" name="organization" required>
+          <select class="form-control" name="organization">
             <option selected>Select...</option>
             {{#each organizations}}
               <option value="{{_id}}">{{name}} ({{city}}, {{state}})</option>
@@ -81,7 +81,7 @@
       <div class="form-group col-md-12 row align-items-end" id="modifyMissionButtons">
         <div class="col-md-6">
           <label for="confirmAction">Confirm action by entering launch code</label>
-          <input class="form-control" type="text" name="confirmAction" autocomplete="off">
+          <input class="form-control" type="text" name="confirmAction" autocomplete="off" required>
         </div>
         <div class="col-md-6 text-right">
           <button type="submit" class="btn btn-success btn-default">OK</button> &nbsp;

@@ -1,8 +1,12 @@
 var map,
-    poly;
+    balloonPath,
+    myPath;
 var socket = io();
 
-
+var audio = new Audio('/public/media/sonar.wav');
+var audioOn = false;
+var trackMe = false;
+var myStart;
 
 function initMap() {
   map = new google.maps.Map(document.getElementById("map"), {
@@ -10,16 +14,42 @@ function initMap() {
     zoom: 9
   });
 
-  poly = new google.maps.Polyline({
-  map: map,
-  path: []
-})
+  balloonPath = new google.maps.Polyline({
+    map: map,
+    path: [],
+    strokeColor: '#0000FF',
+    strokeOpacity: 1.0,
+    strokeWeight: 4
+  });
+
+  myPath = new google.maps.Polyline({
+    map: map,
+    path: [],
+    strokeColor: '#FF0000',
+    strokeOpacity: 1.0,
+    strokeWeight: 2
+  });
+  socket.emit('follow mission', missionID);
 }
 
-function getMyLocation() {
-  if (navigator.geolocation) {
-    navigator.geolocation.getCurrentPosition(showMyPosition);
+function panToMe() {
+  if (trackMe) {
+    var path = myPath.getPath();
+    var lastPos = path.pop();
+    map.panTo(lastPos);
+  } else if (navigator.geolocation) {
+    navigator.geolocation.getCurrentPosition(function(pos) {
+      var lat = pos.coords.latitude;
+      var lng = pos.coords.longitude;
+      map.panTo({lat,lng});
+    });
   }
+}
+
+function panToBalloon() {
+  var path = balloonPath.getPath();
+  var lastPos = path.pop();
+  map.panTo(lastPos);
 }
 
 function showMyPosition(pos) {
@@ -31,15 +61,27 @@ function showMyPosition(pos) {
   });
 }
 
-function addPoint(data) {
-  var lat = data.lat;
-  var lng = data.lng;
-  var path = poly.getPath();
+function appendMyPath(pos) {
+  var lat = pos.coords.latitude;
+  var lng = pos.coords.longitude;
+  var path = myPath.getPath();
+  if (path.length < 1) {
+    myStart = new google.maps.Marker({
+      position: {lat, lng},
+      map: map,
+    });
+  }
   path.push(new google.maps.LatLng({lat, lng}));
-  poly.setPath(path);
+  myPath.setPath(path);
 }
 
-
+function appendBalloonPath(data) {
+  var lat = data.lat;
+  var lng = data.lng;
+  var path = balloonPath.getPath();
+  path.push(new google.maps.LatLng({lat, lng}));
+  balloonPath.setPath(path);
+}
 
 $(document).ready(function() {
   function setGPSLock(data) {
@@ -62,10 +104,23 @@ $(document).ready(function() {
   }
 
   socket.on('waypoint', (data) => {
-    console.log(data);
-    addPoint(data);
+    appendBalloonPath(data);
     setGPSLock(data);
     setAltitude(data);
     setUpdateTime(data);
+    if (audioOn) audio.play();
   });
+
+  $('#enablePingCheck').change(function() {
+    audioOn = this.checked;
+  });
+
+  $('#trackMeCheck').change(function() {
+    if (this.checked) {
+      if (navigator.geolocation) {
+        navigator.geolocation.watchPosition(appendMyPath);
+        trackMe = true;
+      }
+    }
+  })
 })
