@@ -6,6 +6,7 @@ const passport = require('passport'),
 const Organization = require('../models/organization'),
       Mission = require('../models/mission').Mission,
       PodSchema = require('../models/mission').PodSchema,
+      Account = require('../models/account'),
       podDataTypes = require('../models/mission').podDataTypes,
       accessControl = require('../helpers/accessControl');
 
@@ -108,12 +109,14 @@ module.exports = {
               launchCode: randomString('a', 4),
               description: req.body.missionDescription,
               organizationID: organization._id,
-              launchDate: req.body.predictedLaunchDate
+              launchDate: req.body.predictedLaunchDate,
+              createdByID: req.user._id
             });
             newMission.save((err, mission) => {
               ViewModel.mission = mission;
               ViewModel.organization = organization;
               ViewModel.formattedLaunchDate = mission.launchDate.toDateString() + ' (tentative)';
+              ViewModel.createdByName = req.user.username;
               req.session.missionOverviewData = ViewModel;
               res.redirect('/missionOverview');
             });
@@ -142,23 +145,30 @@ module.exports = {
       ViewModel.organizations = [];
       Organization.find({}, {}, {sort: {name: 1}}, (err, organizations) => {
         ViewModel.organizations = organizations;
-        orgDict = {};
-        for (i=0; i<organizations.length; i++) {
+        var orgDict = {};
+        for (let i=0; i<organizations.length; i++) {
           orgDict[organizations[i]._id] = organizations[i].name;
         }
-        Mission.find({}, {}, {sort: {launchDate: -1}}, (err, missions) => {
-          ViewModel.missions = missions;
-          dictMissionDescription = {};
-          for (i=0; i<missions.length; i++) {
-            ViewModel.missions[i].formattedLaunchDate = missions[i].launchDate.toISOString().substring(0, 10);
-            ViewModel.missions[i].orgName = orgDict[missions[i].organizationID];
-            dictMissionDescription[String(missions[i]._id)] = missions[i].description;
+        Account.find({}, {}, {}, (err, accounts) => {
+          var userDict = {};
+          for (let i = 0; i < accounts.length; i++) {
+            userDict[accounts[i]._id] = accounts[i].username;
           }
-          ViewModel.dictMissionDescription = dictMissionDescription;
-          ViewModel.manageMissionsJS = true;
-          ViewModel.usesDatePicker = true;
-          ViewModel.usesDataTable = true;
-          res.render('manageMissions', ViewModel);
+          Mission.find({}, {}, {sort: {launchDate: -1}}, (err, missions) => {
+            ViewModel.missions = missions;
+            dictMissionDescription = {};
+            for (let i=0; i<missions.length; i++) {
+              ViewModel.missions[i].formattedLaunchDate = missions[i].launchDate.toISOString().substring(0, 10);
+              ViewModel.missions[i].orgName = orgDict[missions[i].organizationID];
+              ViewModel.missions[i].createdByName = userDict[missions[i].createdByID];
+              //dictMissionDescription[String(missions[i]._id)] = missions[i].description;
+            }
+            //ViewModel.dictMissionDescription = dictMissionDescription;
+            ViewModel.manageMissionsJS = true;
+            ViewModel.usesDatePicker = true;
+            ViewModel.usesDataTable = true;
+            res.render('manageMissions', ViewModel);
+          });
         });
       });
     }
@@ -178,6 +188,9 @@ module.exports = {
                     break;
                   case 'Change organization':
                     mission.organizationID = req.body.organization;
+                    break;
+                  case 'Change description':
+                    mission.description = req.body.description;
                     break;
                   case 'Change planned launch date':
                     mission.launchDate = req.body.predictedLaunchDate

@@ -29,7 +29,8 @@ const Mission = new Schema({
     enum: ['planned','active','archived'],
     default: 'planned'
   },
-  launchDate: Date
+  launchDate: Date,
+  createdByID: Schema.Types.ObjectId
 })
 
 module.exports = {

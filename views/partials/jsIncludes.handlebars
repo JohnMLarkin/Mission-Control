@@ -1,0 +1,30 @@
+<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+{{#if usesCharts}}
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.2/Chart.bundle.min.js" type="text/javascript"></script>
+{{/if}}
+{{#if usesDataTable}}
+  <script type="text/javascript" src="https://cdn.datatables.net/v/bs4/dt-1.10.18/b-1.5.2/b-html5-1.5.2/sl-1.2.6/datatables.min.js"></script>
+{{/if}}
+{{#if usesDatePicker}}
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.8.0/js/bootstrap-datepicker.min.js"></script>
+{{/if}}
+{{#if usesSockets}}
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.1.1/socket.io.js"></script>
+{{/if}}
+{{#if manageUsersJS}}
+  <script type="text/javascript" src="/public/js/manageUsers.js"></script>
+{{/if}}
+{{#if createMissionJS}}
+  <script type="text/javascript" src="/public/js/createMission.js"></script>
+{{/if}}
+{{#if manageMissionsJS}}
+  <script type="text/javascript" src="/public/js/manageMissions.js"></script>
+{{/if}}
+{{#if trackJS}}
+    <script type="text/javascript" src="/public/js/track.js"></script>
+{{/if}}
+{{#if usesGoogleMaps}}
+  <script async defer src="https://maps.googleapis.com/maps/api/js?key={{GoogleMapsKey}}&callback=initMap"></script>
+{{/if}}

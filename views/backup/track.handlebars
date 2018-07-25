@@ -18,22 +18,13 @@
               aria-selected="false">Cmd Mod
           </a>
         </li>
-        <li class="nav-item">
-          <a class="nav-link" id="temperature-tab" data-toggle="tab"
-              href="#temperature" role="tab" aria-controls="temperature"
-              aria-selected="false">Temperature
-          </a>
-        </li>
       </ul>
       <div class="tab-content" id="trackTabContent">
         <div class="tab-pane fade show active" id="tracking" role="tabpanel" aria-labelledby="tracking-tab">
           {{>trackingTab}}
         </div>
-        <div class="tab-pane fade" id="command" role="tabpanel" aria-labelledby="details-tab">
+        <div class="tab-pane fade" id="command" role="tabpanel" aria-labelledby="command-tab">
           {{>commandModuleTab}}
-        </div>
-        <div class="tab-pane fade" id="temperature" role="tabpanel" aria-labelledby="temperature-tab">
-          {{>temperatureTab}}
         </div>
       </div>
     </div>

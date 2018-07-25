@@ -15,6 +15,7 @@
               <th scope="col">Organization</th>
               <th scope="col">Date</th>
               <th scope="col">Description</th>
+              <th scope="col">Created By</th>
               <th scope="col">Launch Code</th>
             </tr>
           </thead>
@@ -27,6 +28,7 @@
                     <td>{{orgName}}</td>
                     <td>{{formattedLaunchDate}}</td>
                     <td>{{description}}</td>
+                    <td>{{createdByName}}</td>
                     <td>{{launchCode}}</td>
                   </tr>
               {{/each}}
@@ -68,6 +70,11 @@
             {{/each}}
           </select>
         </div>
+        <div class="col-md-6" id="modify-description">
+          <label class="control-label" for="description">Description (50 character maximum)</label>
+          <input class="form-control" type="text" name="description" autocomplete="off" maxlength="50">
+        </div>
+
         <div class="form-group col-md-6" id="modify-launch-date">
           <label class="control-label" for="predictedLaunchDate">Launch date (planned)</label>
           <div class="input-group date">

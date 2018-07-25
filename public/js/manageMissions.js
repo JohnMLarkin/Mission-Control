@@ -2,6 +2,7 @@ $(function() {
   $('#modify-status').hide();
   $('#modify-organization').hide();
   $('#modify-launch-date').hide();
+  $('#modify-description').hide();
   $('#modifyMissionButtons').hide();
   $('#missionActionSelect').on('change', function() {
     switch (this.value) {
@@ -9,30 +10,42 @@ $(function() {
         $('#modify-status').show();
         $('#modify-organization').hide();
         $('#modify-launch-date').hide();
+        $('#modify-description').hide();
         $('#modifyMissionButtons').show();
         break;
       case 'Change organization':
         $('#modify-status').hide();
         $('#modify-organization').show();
         $('#modify-launch-date').hide();
+        $('#modify-description').hide();
+        $('#modifyMissionButtons').show();
+        break;
+      case 'Change description':
+        $('#modify-status').hide();
+        $('#modify-organization').hide();
+        $('#modify-launch-date').hide();
+        $('#modify-description').show();
         $('#modifyMissionButtons').show();
         break;
       case 'Change planned launch date':
         $('#modify-status').hide();
         $('#modify-organization').hide();
         $('#modify-launch-date').show();
+        $('#modify-description').hide();
         $('#modifyMissionButtons').show();
         break;
       case 'Delete mission':
         $('#modify-status').hide();
         $('#modify-organization').hide();
         $('#modify-launch-date').hide();
+        $('#modify-description').hide();
         $('#modifyMissionButtons').show();
         break;
       default:
         $('#modify-status').hide();
         $('#modify-organization').hide();
         $('#modify-launch-date').hide();
+        $('#modify-description').hide();
         $('#modifyMissionButtons').hide();
     }
   });

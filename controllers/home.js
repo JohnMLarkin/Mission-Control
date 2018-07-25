@@ -1,4 +1,6 @@
-const accessControl = require('../helpers/accessControl');
+const accessControl = require('../helpers/accessControl'),
+      Organization = require('../models/organization'),
+      Mission = require('../models/mission').Mission;
 
 // const homeSidebar = require('../helpers/homeSidebar'),
 //       MissionModel = require('../models').Mission;
@@ -6,7 +8,37 @@ const accessControl = require('../helpers/accessControl');
 module.exports = {
   index(req, res) {
     var ViewModel = accessControl.navBarSupport(req.user);
-    res.render('home', ViewModel);
+    ViewModel.activeMissions = [];
+    ViewModel.plannedMissions = [];
+    ViewModel.archivedMissions = [];
+    Organization.find({}, {}, {}, (err, organizations) => {
+      var orgDict = {};
+      for (let i=0; i<organizations.length; i++) {
+        orgDict[organizations[i]._id] = organizations[i].name;
+      }
+      Mission.find({}, {}, {sort: {launchDate: -1}}, (err, missions) => {
+        for (let i = 0; i < missions.length; i++) {
+          missions[i].orgName = orgDict[missions[i].organizationID];
+          missions[i].formattedLaunchDate = missions[i].launchDate.toISOString().substring(0, 10);
+          switch (missions[i].status) {
+            case 'planned':
+              ViewModel.plannedMissions.push(missions[i]);
+              break;
+            case 'active':
+              ViewModel.activeMissions.push(missions[i]);
+              break;
+            case 'archived':
+              ViewModel.archivedMissions.push(missions[i]);
+              break;
+            default:
+              console.log('Error: unexpected mission status');
+          }
+        }
+        ViewModel.plannedMissions.reverse();
+        ViewModel.activeMissions.reverse();
+        res.render('home', ViewModel);
+      });
+    });
   },
   controlPanel(req, res) {
     var ViewModel = accessControl.navBarSupport(req.user);
