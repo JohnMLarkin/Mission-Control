@@ -18,7 +18,7 @@ body {
 }
 
 .list-group-item:hover, .list-group-item:focus {
-  background-color: #5bc0de;
+  background-color: #005A78; /*   #005A78 or #5bc0de; */
 }
 
 .list-group-item-success {
@@ -39,4 +39,11 @@ body {
 
 .list-group-item-info {
   background-color: #5bc0de;
+}
+
+.nav-tabs .nav-link.active,
+.nav-tabs .nav-item.show .nav-link {
+  color: #fff;
+  background-color: #54595E;
+  border-color: rgba(0, 0, 0, 0.6);
 }

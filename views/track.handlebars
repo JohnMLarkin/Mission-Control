@@ -3,7 +3,7 @@
     <div class="col-md-9">
       <div id="map" style="width:100%; height: 95vh;"></div>
     </div>
-    <div class="col-md-3">
+    <div class="col-md-3" id="sidebar">
       <h5>Mission {{missionID}}</h5>
       <ul class="nav nav-tabs" id="trackTab" role="tablist">
         <li class="nav-item">
@@ -15,13 +15,19 @@
         <li class="nav-item">
           <a class="nav-link" id="command-tab" data-toggle="tab"
               href="#command" role="tab" aria-controls="command"
-              aria-selected="false">Cmd Mod
+              aria-selected="false">Cmd
           </a>
         </li>
         <li class="nav-item">
           <a class="nav-link" id="temperature-tab" data-toggle="tab"
               href="#temperature" role="tab" aria-controls="temperature"
-              aria-selected="false">Temperature
+              aria-selected="false">Ext
+          </a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" id="settings-tab" data-toggle="tab"
+              href="#settings" role="tab" aria-controls="settings"
+              aria-selected="false">Settings
           </a>
         </li>
       </ul>
@@ -34,6 +40,9 @@
         </div>
         <div class="tab-pane fade" id="temperature" role="tabpanel" aria-labelledby="temperature-tab">
           {{>temperatureTab}}
+        </div>
+        <div class="tab-pane fade" id="settings" role="tabpanel" aria-labelledby="settings-tab">
+          {{>trackSettingsTab this}}
         </div>
       </div>
     </div>

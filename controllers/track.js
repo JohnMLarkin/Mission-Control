@@ -10,6 +10,7 @@ module.exports = {
     ViewModel.usesGoogleMaps = true;
     ViewModel.usesSockets = true;
     ViewModel.usesCharts = true;
+    ViewModel.usesGauges = true;
     ViewModel.GoogleMapsKey = secrets.GoogleMapsKey;
     ViewModel.trackJS = true;
     if (req.params.mission_id) {
