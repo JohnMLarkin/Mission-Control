@@ -4,6 +4,7 @@ const mongoose = require('mongoose'),
 const WayPoint = new Schema({
   momsn: Number,  // mobile orginated message sqeuence number (Iridium)
   missionObjectId:  Schema.Types.ObjectId,
+  inFlight: Boolean,
   isGPSfixValid: Boolean,
   isPodActive: [Boolean],
   gpsTime: Date,
@@ -11,6 +12,7 @@ const WayPoint = new Schema({
   lng: Number,
   alt: Number,  // in meters
   vertVel: Number, // in m/s
+  gndSpeed: Number, // in km/h
   heading: Number, // relative to north
   cmdBatteryVoltage: Number,
   intTemp: Number, // internal temperature in deg C
