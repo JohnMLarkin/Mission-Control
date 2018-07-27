@@ -8,6 +8,7 @@ const home = require('../controllers/home'),
       user = require('../controllers/user'),
       planning = require('../controllers/planning'),
       track = require('../controllers/track'),
+      launch_control = require('../controllers/launch_control'),
       Account = require('../models/account');
 
 module.exports = (app) => {
@@ -39,6 +40,11 @@ module.exports = (app) => {
   // Navigation-related routes
   router.get('/controlPanel', home.controlPanel);
 
+  // Mission-related routes
   router.get('/track/:mission_id', track.index);
+
+  // Launch control communication routes
+  router.post('/verifyLaunchCode/:mission_id', launch_control.verifyLaunchCode);
+
   app.use(router);
 }

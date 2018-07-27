@@ -2,8 +2,7 @@
 const express = require('express'),
       mongoose = require('mongoose'),
       socketio = require('socket.io'),
-      fs = require('fs'),
-      watch = require('watch');
+      fs = require('fs');
 
 const secrets = require('./server/_secrets');
 
@@ -100,14 +99,3 @@ function startTimer() {
     fakeExtTemp = fakeExtTemp - 0.1-0.1*Math.random();
   }, 6000)
 }
-
-/********************************************************
-  File system monitor for incoming SBD messages
-********************************************************/
-watch.createMonitor('./sbd/incoming', { interval: 30 },
-  function(monitor) {
-    monitor.on("created", function (f, stat) {
-      console.log(f + " created");
-    });
-  }
-);
