@@ -48,6 +48,8 @@ module.exports = (app) => {
   router.get('/getManifest/:mission_id', launch_control.getManifest);
   router.put('/setManifest/:mission_id', launch_control.setManifest);
   router.get('/verifyActiveStatus/:mission_id', launch_control.verifyActiveStatus);
+  router.put('/setStatusActive/:mission_id', launch_control.setStatusActive);
+  router.put('/setStatusPlanned/:mission_id', launch_control.setStatusPlanned);
 
   app.use(router);
 }

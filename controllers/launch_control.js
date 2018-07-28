@@ -82,5 +82,61 @@ module.exports = {
         }
       }
     );
+  },
+  setStatusActive(req, res) {
+    Mission.findOne({missionID: req.params.mission_id},
+      (err, mission) => {
+        if (err) {
+          res.status(404).send('DB ACCESS ERROR');
+        }
+        if (mission) {
+          if (mission.launchCode == req.body.launchCode) {
+            if (mission.status == 'archived') {
+              res.status(403).send('Mission is archived and may not be altered');
+            } else {
+              mission.status = 'active';
+              mission.save((err) => {
+                if (err) {
+                  console.log(err);
+                }
+                res.send('UPDATE OK');
+              });
+            }
+          } else {
+            res.status(401).send('Incorrect launch code');
+          }
+        } else {
+          res.status(404).send('Mission not found');
+        }
+      }
+    );
+  },
+  setStatusPlanned(req, res) {
+    Mission.findOne({missionID: req.params.mission_id},
+      (err, mission) => {
+        if (err) {
+          res.status(404).send('DB ACCESS ERROR');
+        }
+        if (mission) {
+          if (mission.launchCode == req.body.launchCode) {
+            if (mission.status == 'archived') {
+              res.status(403).send('Mission is archived and may not be altered');
+            } else {
+              mission.status = 'planned';
+              mission.save((err) => {
+                if (err) {
+                  console.log(err);
+                }
+                res.send('UPDATE OK');
+              });
+            }
+          } else {
+            res.status(401).send('Incorrect launch code');
+          }
+        } else {
+          res.status(404).send('Mission not found');
+        }
+      }
+    );
   }
 }
