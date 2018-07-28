@@ -45,6 +45,9 @@ module.exports = (app) => {
 
   // Launch control communication routes
   router.post('/verifyLaunchCode/:mission_id', launch_control.verifyLaunchCode);
+  router.get('/getManifest/:mission_id', launch_control.getManifest);
+  router.put('/setManifest/:mission_id', launch_control.setManifest);
+  router.get('/verifyActiveStatus/:mission_id', launch_control.verifyActiveStatus);
 
   app.use(router);
 }

@@ -5,7 +5,6 @@ const passport = require('passport'),
 
 const Organization = require('../models/organization'),
       Mission = require('../models/mission').Mission,
-      PodSchema = require('../models/mission').PodSchema,
       Account = require('../models/account'),
       podDataTypes = require('../models/mission').podDataTypes,
       accessControl = require('../helpers/accessControl');
