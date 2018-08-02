@@ -1,0 +1,47 @@
+<div class="card text-white bg-info mb-3">
+  <div class="card-header">
+    <h3 class="card-title">
+      Planned Mission Overview
+    </h3>
+  </div>
+  <div class="card-body form-horizontal">
+    <h5 class="card-title">Mission {{mission.missionID}}</h5>
+    <div class="card-text">
+      <dl>
+        <dt>Description</dt> <dd>{{mission.description}}</dd>
+        <dt>Organization</dt> <dd>{{organization.name}} ({{organization.city}}, {{organization.state}})</dd>
+        <dt>Status</dt> <dd>{{mission.status}}</dd>
+        <dt>Launch Date</dt> <dd>{{formattedLaunchDate}}</dd>
+        {{#if authorizedViewer}}
+          <dt>Launch Code</dt> <dd>{{mission.launchCode}}</dd>
+        {{/if}}
+      </dl>
+    </div>
+  </div>
+  <div class="card-footer form-horizontal">
+    <table class="table">
+    {{#each podData}}
+    <tr>
+      <td><strong>Pod {{id}}</strong>
+        <br>{{podDescription}}</td>
+      <td>
+        <table class="table">
+          <thead>
+            <tr>
+              <th scope="col">Description</th>
+              <th scope="col">Type</th>
+            </tr>
+          </thead>
+          {{#each data}}
+            <tr>
+              <td>{{description}}</td>
+              <td>{{dataType}}</td>
+            </tr>
+          {{/each}}
+        </table>
+      </td>
+    </tr>
+    {{/each}}
+    </table>
+  </div>
+</div>

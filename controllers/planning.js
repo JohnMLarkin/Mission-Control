@@ -90,7 +90,6 @@ module.exports = {
           console.log('Error on Mission.find query');
           console.log(err);
         }
-        console.log(req.body);
         var newMissionID;
         if (missions.length > 0) {
           newMissionID = missions[0].missionID + 1;
@@ -112,12 +111,12 @@ module.exports = {
               createdByID: req.user._id
             });
             newMission.save((err, mission) => {
-              ViewModel.mission = mission;
-              ViewModel.organization = organization;
-              ViewModel.formattedLaunchDate = mission.launchDate.toDateString() + ' (tentative)';
-              ViewModel.createdByName = req.user.username;
-              req.session.missionOverviewData = ViewModel;
-              res.redirect('/missionOverview');
+              //ViewModel.mission = mission;
+              //ViewModel.organization = organization;
+              //ViewModel.formattedLaunchDate = mission.launchDate.toDateString() + ' (tentative)';
+              //ViewModel.createdByName = req.user.username;
+              //req.session.missionOverviewData = ViewModel;
+              res.redirect(`/plannedOverview/${newMissionID}`);
             });
         });
       });
@@ -125,7 +124,7 @@ module.exports = {
       res.redirect('/login');
     }
   },
-  missionOverview(req, res) {
+  missionOverviewOld(req, res) {
     if (req.session.missionOverviewData) {
       var ViewModel = req.session.missionOverviewData;
       req.session.missionOverviewData = null;
@@ -135,7 +134,55 @@ module.exports = {
     if (!accessControl.flightDirectorOrAdmin(req)) {
       ViewModel.mission.launchCode = null;
     }
-    res.render('missionOverview', ViewModel);
+    res.render('missionOverviewOld', ViewModel);
+  },
+  plannedOverview(req, res) {
+    var ViewModel = accessControl.navBarSupport(req.user);
+    if (req.params.mission_id) {
+      ViewModel.missionID = req.params.mission_id;
+    }
+    Mission.findOne({missionID: req.params.mission_id}, (err, mission) => {
+      if (err) {
+        console.log(err);
+        res.redirect('/');
+      } else {
+        ViewModel.mission = mission;
+        ViewModel.formattedLaunchDate = mission.launchDate.toDateString() + ' (tentative)';
+        ViewModel.authorizedViewer = false;
+        if (req.user) {
+          if ((req.user._id == mission.createdByID) || (req.user.role == 'admin')) {
+            ViewModel.authorizedViewer = true;
+          }
+        }
+        let podData = [];
+        let n = 0;
+        for (let i = 0; i < mission.podManifest.length; i++) {
+          if (mission.podManifest[i].dataTypes.length>0) {
+            podData[n] = {};
+            podData[n].id = i+1;
+            podData[n].podDescription = mission.podManifest[i].podDescription;
+            podData[n].data = [];
+            for (let j = 0; j < mission.podManifest[i].dataTypes.length; j++) {
+              podData[n].data[j] = {};
+              podData[n].data[j].description = mission.podManifest[i].dataDescriptions[j];
+              podData[n].data[j].dataType = mission.podManifest[i].dataTypes[j];
+            }
+            n++;
+          }
+        }
+        ViewModel.podData = podData;
+        Organization.findById(mission.organizationID,
+          (err, organization) => {
+            if (err) {
+              console.log(err);
+              res.redirect('/');
+            } else {
+              ViewModel.organization = organization;
+              res.render('plannedOverview', ViewModel);
+          }
+        });
+      }
+    });
   },
   manageMissions(req, res) {
     var ViewModel = accessControl.navBarSupport(req.user);

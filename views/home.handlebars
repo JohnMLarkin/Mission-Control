@@ -49,7 +49,7 @@
           </thead>
           <tbody>
             {{#each plannedMissions}}
-            <tr>
+            <tr onclick="window.location='plannedOverview/{{missionID}}';" style="cursor: pointer;">
               <td>{{missionID}}</td>
               <td>{{orgName}}</td>
               <td>{{formattedLaunchDate}}</td>
