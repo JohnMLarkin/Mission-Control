@@ -114,6 +114,20 @@ class GmailClient {
      });
    }
 
+   async getAttachment(msgId, attachmentId) {
+     return new Promise( (resolve, reject) => {
+       this.gmail.users.messages.attachments.get({
+         userId: 'me',
+         id: attachmentId,
+         messageId: msgId
+       }, (err, res) => {
+         if (err) reject('The API returned an error: ' + err);
+         var msgData = Buffer.from(res.data.data,'base64');
+         resolve(msgData);
+       })
+     });
+   }
+
    async markRead(msgId) {
      return new Promise( (resolve, reject) => {
        this.gmail.users.messages.modify({
@@ -137,7 +151,6 @@ class GmailClient {
          topicName: topicToWatch
        }
      });
-     console.log(res.data);
      return res.data;
    }
 

@@ -17,7 +17,7 @@ const WayPoint = new Schema({
   cmdBatteryVoltage: Number,
   intTemp: Number, // internal temperature in deg C
   extTemp: Number, // external temperature in deg C
-  podData: []
+  podData: Buffer
 });
 
 module.exports = mongoose.model('WayPoint', WayPoint);
