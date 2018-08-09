@@ -13,6 +13,8 @@ const readline = require('readline');
 const opn = require('opn');
 const path = require('path');
 
+const parseMessage = require('./gmailParser');
+
 class GmailClient {
 /**
 * Constructor takes options with the following default values
@@ -162,4 +164,4 @@ class GmailClient {
 
 
 
- module.exports = GmailClient;
+ module.exports = {GmailClient, parseMessage};

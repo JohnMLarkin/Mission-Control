@@ -2,7 +2,8 @@
 const express = require('express'),
       mongoose = require('mongoose'),
       socketio = require('socket.io'),
-      fs = require('fs');
+      fs = require('fs'),
+      processSBD = require('./helpers/processSBD');
 
 const secrets = require('./server/_secrets');
 
@@ -20,7 +21,6 @@ mongoose.connection.on('open', () => {
   console.log('Connected to MongoDB');
 })
 
-
 // Start the web server
 const server = app.listen(app.get('port'), () => {
   console.log(`Local server up: http://localhost:${app.get('port')}`);
@@ -29,17 +29,17 @@ const server = app.listen(app.get('port'), () => {
 /********************************************************
   Socket service for pushing data updates to browser
 ********************************************************/
-let timerId = null;  // for testing only
-let sockets = new Set();
+// let timerId = null;  // for testing only
+var sockets = new Set();
 var io = socketio(server);
 
 io.on('connection', (socket) => {
   sockets.add(socket);
 
   // for testing only
-  if (!timerId) {
-    startTimer();
-  }
+  // if (!timerId) {
+  //   startTimer();
+  // }
 
   socket.on('disconnect', () => {
     sockets.delete(socket);
@@ -52,50 +52,53 @@ io.on('connection', (socket) => {
 
 // For socket testing only
 // Deployed version will call on incoming SBD message
-var fakeLng = -118;
-var fakeAlt = 0;
-var fakeBatt = 8.4;
-var fakeIntTemp = 21;
-var fakeExtTemp = 21;
-var fakeLat;
-var fakeTime;
-var fakeMissionID = 1;
+// var fakeLng = -118;
+// var fakeAlt = 0;
+// var fakeBatt = 8.4;
+// var fakeIntTemp = 21;
+// var fakeExtTemp = 21;
+// var fakeLat;
+// var fakeTime;
+// var fakeMissionID = 1;
+//
+// function startTimer() {
+//   timerId = setInterval(() => {
+//     if (!sockets.size) {
+//       clearInterval(timerId);
+//       timerId = null;
+//       fakeLng = -118;
+//       fakeAlt = 0;
+//       fakeBatt = 8.4;
+//       fakeIntTemp = 21;
+//       fakeExtTemp = 21;
+//     }
+//
+//     fakeLat = 0.5*Math.sin(fakeLng) + 47.0;
+//     fakeTime = Date.now();
+//     fakeVertVel = 5+2*Math.random();
+//     for (const s of sockets) {
+//       if (s.missionID == fakeMissionID) {
+//         s.emit('waypoint', {
+//           lat: fakeLat,
+//           lng: fakeLng,
+//           isGPSlocked: (fakeLat>47),
+//           alt: fakeAlt,
+//           updateTime: fakeTime,
+//           heading: 45+45*Math.random(),
+//           cmdBatteryVoltage: fakeBatt,
+//           intTemp: fakeIntTemp,
+//           extTemp: fakeExtTemp,
+//           vertVel: fakeVertVel
+//         });
+//       }
+//     }
+//     fakeLng = fakeLng + 0.05+0.01*Math.random();
+//     fakeAlt = fakeAlt + 6*fakeVertVel;
+//     fakeBatt = fakeBatt - 0.02;
+//     fakeIntTemp = fakeIntTemp + 0.1*Math.sin(fakeLng);
+//     fakeExtTemp = fakeExtTemp - 0.1-0.1*Math.random();
+//   }, 6000)
+// }
 
-function startTimer() {
-  timerId = setInterval(() => {
-    if (!sockets.size) {
-      clearInterval(timerId);
-      timerId = null;
-      fakeLng = -118;
-      fakeAlt = 0;
-      fakeBatt = 8.4;
-      fakeIntTemp = 21;
-      fakeExtTemp = 21;
-    }
-
-    fakeLat = 0.5*Math.sin(fakeLng) + 47.0;
-    fakeTime = Date.now();
-    fakeVertVel = 5+2*Math.random();
-    for (const s of sockets) {
-      if (s.missionID == fakeMissionID) {
-        s.emit('waypoint', {
-          lat: fakeLat,
-          lng: fakeLng,
-          isGPSlocked: (fakeLat>47),
-          alt: fakeAlt,
-          updateTime: fakeTime,
-          heading: 45+45*Math.random(),
-          cmdBatteryVoltage: fakeBatt,
-          intTemp: fakeIntTemp,
-          extTemp: fakeExtTemp,
-          vertVel: fakeVertVel
-        });
-      }
-    }
-    fakeLng = fakeLng + 0.05+0.01*Math.random();
-    fakeAlt = fakeAlt + 6*fakeVertVel;
-    fakeBatt = fakeBatt - 0.02;
-    fakeIntTemp = fakeIntTemp + 0.1*Math.sin(fakeLng);
-    fakeExtTemp = fakeExtTemp - 0.1-0.1*Math.random();
-  }, 6000)
-}
+// Start the Gmail subscription
+processSBD.gmailListener(sockets);
