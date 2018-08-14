@@ -17,6 +17,10 @@ module.exports = {
       ViewModel.missionID = req.params.mission_id;
     }
     ViewModel.pastPath = [];
+    ViewModel.pastAlt = [];
+    ViewModel.pastBatt = [];
+    ViewModel.pastIntTemp = [];
+    ViewModel.pastExtTemp = [];
     Mission.findOne({missionID: req.params.mission_id}, (err, mission) => {
       if (err) {
         console.log('Error on Mission.findOne query');
@@ -24,7 +28,11 @@ module.exports = {
       }
       WayPoint.find({missionObjectId: mission._id}, {}, {sort: {gpsTime: 1}}, (err, waypoints) => {
         for (let i = 0; i < waypoints.length; i++) {
-          ViewModel.pastPath.push({lat: waypoints[i].lat, lng: waypoints[i].lng})
+          ViewModel.pastPath.push({lat: waypoints[i].lat, lng: waypoints[i].lng});
+          ViewModel.pastAlt.push({x: waypoints[i].gpsTime, y: waypoints[i].alt});
+          ViewModel.pastBatt.push({x: waypoints[i].gpsTime, y: waypoints[i].cmdBatteryVoltage});
+          ViewModel.pastIntTemp.push({x: waypoints[i].gpsTime, y: waypoints[i].intTemp});
+          ViewModel.pastExtTemp.push({x: waypoints[i].extTemp, y: waypoints[i].alt});
         }
         res.render('track', ViewModel);
       });
