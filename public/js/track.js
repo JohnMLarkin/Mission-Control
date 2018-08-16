@@ -203,6 +203,7 @@ var altChart = new Chart(ctx1, {
       fill: true,
       backgroundColor: gradientFill,
       pointRadius: 2,
+      lineTension: 0,
       data: pastAlt
     }]
   },
@@ -248,6 +249,7 @@ var batteryChart = new Chart(ctx2, {
       pointBorderColor: '#5bc0de',
       fill: false,
       pointRadius: 2,
+      lineTension: 0,
       data: pastBatt
     }]
   },
@@ -290,6 +292,7 @@ var internalTempChart = new Chart(ctx3, {
       pointBorderColor: '#5bc0de',
       fill: false,
       pointRadius: 2,
+      lineTension: 0,
       data: pastIntTemp
     }]
   },
@@ -332,6 +335,7 @@ var externalTempChart = new Chart(ctx4, {
       pointBorderColor: '#5bc0de',
       fill: false,
       pointRadius: 2,
+      lineTension: 0,
       data: pastExtTemp
     }]
   },
