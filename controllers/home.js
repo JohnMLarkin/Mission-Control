@@ -1,6 +1,7 @@
 const accessControl = require('../helpers/accessControl'),
       Organization = require('../models/organization'),
-      Mission = require('../models/mission').Mission;
+      Mission = require('../models/mission').Mission,
+      Announcement = require('../models/announcement');
 
 // const homeSidebar = require('../helpers/homeSidebar'),
 //       MissionModel = require('../models').Mission;
@@ -36,7 +37,17 @@ module.exports = {
         }
         ViewModel.plannedMissions.reverse();
         ViewModel.activeMissions.reverse();
-        res.render('home', ViewModel);
+        var now = Date.now();
+        Announcement.find({
+          $or: [
+            {expires: false},
+            {$and: [{expires: true}, {expireDate: {$gte: now}}]}
+           ]
+         }, {}, {}, (err, announcements) => {
+          if (err) {throw err};
+          ViewModel.announcements = announcements;
+          res.render('home', ViewModel);
+        });
       });
     });
   },

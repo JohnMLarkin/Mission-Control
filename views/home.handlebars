@@ -32,26 +32,40 @@
   </div>
   <div class="col-md-6">
     <div id="announcementCarousel" class="carousel slide" data-ride="carousel"
-    style="width: 100%; height: 200px; padding: 50px;">
+    data-interval="15000" style="width: 100%; height: 200px;">
       <div class="carousel-inner text-center">
         <div class="carousel-item active">
-          <div class="d-flex h-100 align-items-center justify-content-center">
-            <p>Mission Control is a high altitude balloon tracking
-              site.  It is still under development so please be patient.  Constructive
-              feedback may be sent to jlarkin@whitworth.edu
-            </p>
+          <div class="d-flex h-100 flex-column align-items-center justify-content-center">
+            <div class="col-2">
+              &nbsp;
+            </div>
+            <div class="col-8">
+              <p>Mission Control is a high altitude balloon tracking
+                site.  It is still under development so please be patient.  Constructive
+                feedback may be sent to jlarkin@whitworth.edu
+              </p>
+            </div>
+            <div class="col-2">
+              &nbsp;
+            </div>
           </div>
         </div>
+        {{#each announcements}}
         <div class="carousel-item">
-          <div class="d-flex h-100 align-items-center justify-content-center">
-            <p>Placeholder for info on an upcoming launch</p>
+          <div class="d-flex h-100 flex-column align-items-center justify-content-center">
+            <div class="col-2">
+              &nbsp;
+            </div>
+            <div class="col-8">
+              <h5>{{title}}</h5>
+              <p>{{body}}</p>
+            </div>
+            <div class="col-2">
+              &nbsp;
+            </div>
           </div>
         </div>
-        <div class="carousel-item">
-          <div class="d-flex h-100 align-items-center justify-content-center">
-            <p>The announcement feature is still in development stage so content is static for now</p>
-          </div>
-        </div>
+        {{/each}}
       </div>
       <a class="carousel-control-prev" href="#announcementCarousel" role="button" data-slide="prev">
         <span class="carousel-control-prev-icon" aria-hidden="true"></span>

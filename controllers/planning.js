@@ -7,6 +7,7 @@ const Organization = require('../models/organization'),
       Mission = require('../models/mission').Mission,
       Account = require('../models/account'),
       WayPoint = require('../models/waypoint'),
+      Announcement = require('../models/announcement'),
       podDataTypes = require('../models/mission').podDataTypes,
       accessControl = require('../helpers/accessControl');
 
@@ -279,6 +280,43 @@ module.exports = {
       }
     } else {
       res.redirect('/');
+    }
+  },
+  createAnnouncement(req, res) {
+    var ViewModel = accessControl.navBarSupport(req.user);
+    if (accessControl.flightDirectorOrAdmin(req)) {
+      ViewModel.createAnnouncementJS = true;
+      ViewModel.usesDatePicker = true;
+      res.render('createAnnouncement', ViewModel);
+    } else {
+      res.redirect('/login');
+    }
+  },
+  addAnnouncement(req, res) {
+    var ViewModel = accessControl.navBarSupport(req.user);
+    if (accessControl.flightDirectorOrAdmin(req)) {
+      if (req.body.expires) {
+        var newAnnouncement = new Announcement({
+          title: req.body.announcementTitle,
+          body: req.body.announcementBody,
+          expires: true,
+          expireDate: req.body.expireDate,
+          createdByName: req.user.username
+        });
+      } else {
+        var newAnnouncement = new Announcement({
+          title: req.body.announcementTitle,
+          body: req.body.announcementBody,
+          expires: false,
+          createdByName: req.user.username
+        });
+      }
+      newAnnouncement.save((err) => {
+        if (err) {throw err};
+        res.redirect('/controlPanel');
+      });
+    } else {
+      res.redirect('/login');
     }
   }
 }

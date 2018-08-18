@@ -37,6 +37,8 @@ module.exports = (app) => {
   router.get('/plannedOverview/:mission_id', planning.plannedOverview);
   router.get('/manageMissions', planning.manageMissions);
   router.post('/modifyMission', planning.modifyMission);
+  router.get('/createAnnouncement', planning.createAnnouncement);
+  router.post('/addAnnouncement', planning.addAnnouncement);
 
   // Navigation-related routes
   router.get('/controlPanel', home.controlPanel);

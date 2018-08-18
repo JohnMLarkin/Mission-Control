@@ -1,5 +1,5 @@
 <div class="row">
-  <div class="col-md-6">
+  <div class="col-md-4">
     <div class="card text-white bg-primary mb-3">
       <div class="card-header">
         <h5 class="card-title">
@@ -14,7 +14,7 @@
       </div>
     </div>
   </div>
-  <div class="col-md-6">
+  <div class="col-md-4">
     <div class="card text-white bg-primary mb-3">
       <div class="card-header">
         <h5 class="card-title">
@@ -29,6 +29,20 @@
         {{#if isAdmin}}
           <a class="btn btn-secondary" href="/manageUsers" role="button">Manage users</a>
           <a class="btn btn-secondary" href="/createOrg" role="button">Create organization</a>
+        {{/if}}
+      </div>
+    </div>
+  </div>
+  <div class="col-md-4">
+    <div class="card text-white bg-primary mb-3">
+      <div class="card-header">
+        <h5 class="card-title">
+          Other
+        </h5>
+      </div>
+      <div class="card-body form-horizontal">
+        {{#if flightDirectorOrAdmin}}
+          <a class="btn btn-primary" href="/createAnnouncement" role="button">Create announcement</a>
         {{/if}}
       </div>
     </div>
