@@ -1,0 +1,88 @@
+<div class="container-fluid" style="padding:0; margin:0">
+  <div class="row">
+    <div class="col-md-3" id="sidebar">
+      <div class="card text-white mb-3">
+        <div class="card-header">
+          <h5 class="card-title">
+            Mission {{missionID}} Review
+          </h5>
+        </div>
+        <div class="card-body form-horizontal">
+          <div class="card-text">
+            <dl>
+              <dt>Description</dt> <dd>{{missionDescription}}</dd>
+              <dt>Organization</dt> <dd>{{orgName}}</dd>
+              <dt>Launch Date</dt> <dd>{{formattedLaunchDate}}</dd>
+              <dt>Flight Duration</dt> <dd>{{duration}} minutes</dd>
+              <dt>Peak Altitude</dt> <dd>{{peakAlt}} m</dd>
+            </dl>
+            <hr>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-9" id="main">
+      <ul class="nav nav-tabs" id="reviewTab" role="tablist">
+        <li class="nav-item">
+          <a class="nav-link active" id="mapping-tab" data-toggle="tab"
+             href="#mapping" role="tab" aria-controls="mapping"
+             aria-selected="true">Map
+          </a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" id="motion-tab" data-toggle="tab"
+              href="#motion" role="tab" aria-controls="motion"
+              aria-selected="false">Motion
+          </a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" id="command-tab" data-toggle="tab"
+              href="#command" role="tab" aria-controls="command"
+              aria-selected="false">Cmd Module
+          </a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" id="pods-tab" data-toggle="tab"
+              href="#pods" role="tab" aria-controls="pods"
+              aria-selected="false">Pods
+          </a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" id="downloads-tab" data-toggle="tab"
+              href="#downloads" role="tab" aria-controls="downloads"
+              aria-selected="false">Downloads
+          </a>
+        </li>
+      </ul>
+      <div class="tab-content" id="reviewTabContent">
+        <div class="tab-pane fade show active" id="mapping" role="tabpanel" aria-labelledby="mapping-tab">
+          <div id="map" style="width:100%; height: 80vh;"></div>
+        </div>
+        <div class="tab-pane fade" id="motion" role="tabpanel" aria-labelledby="motion-tab">
+          {{>motionReviewTab}}
+        </div>
+        <div class="tab-pane fade" id="command" role="tabpanel" aria-labelledby="command-tab">
+          {{>cmdModReviewTab}}
+        </div>
+        <div class="tab-pane fade" id="pods" role="tabpanel" aria-labelledby="pods-tab">
+          {{>podReviewTab}}
+        </div>
+        <div class="tab-pane fade" id="downloads" role="tabpanel" aria-labelledby="downloads-tab">
+          {{>downloadsTab}}
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<script>
+  const mapCenterLat = {{mapCenterLat}};
+  const mapCenterLng = {{mapCenterLng}};
+  const flightPath = {{{json flightPath}}};
+  const altVsTime = {{{json altVsTime}}};
+  const vertVelVsTime = {{{json vertVelVsTime}}};
+  const gndSpeedVsAlt = {{{json gndSpeedVsAlt}}};
+  const headingVsAlt = {{{json headingVsAlt}}};
+  const battVsTime = {{{json battVsTime}}};
+  const intTempVsTime = {{{json intTempVsTime}}};
+  const extTempVsAlt = {{{json extTempVsAlt}}};
+</script>

@@ -1,27 +1,27 @@
 <ul class="list-group">
-  <li class="list-group-item d-flex justify-content-between align-items-center" style="color: #fff;" id="gpsLockIndicator">
-    GPS Lock
-    <span class="badge"><i id="gpsLockIcon" class="fas fa-question"></i></span>
-  </li>
   <li class="list-group-item d-flex justify-content-between align-items-center" style="color: #fff;">
     Last Updated
-    <span class="text" id="lastUpdateIndicator">&mdash;</span>
+    <span class="text" id="lastUpdateIndicator">{{#if mostRecent}}{{mostRecent.updateTime}}{{else}}&mdash;{{/if}}</span>
   </li>
   <li class="list-group-item d-flex justify-content-between align-items-center" style="color: #fff;">
     Altitude
-    <span class="text" id="altitudeIndicator">&mdash;</span>
+    <span class="text" id="altitudeIndicator">{{#if mostRecent}}{{mostRecent.alt}}{{else}}&mdash;{{/if}}</span>
   </li>
   <li class="list-group-item d-flex justify-content-between align-items-center" style="color: #fff;">
     Vertical Velocity
-    <span class="text" id="verticalVelocityIndicator">&mdash;</span>
+    <span class="text" id="verticalVelocityIndicator">{{#if mostRecent}}{{mostRecent.vertVel}}{{else}}&mdash;{{/if}}</span>
   </li>
   <li class="list-group-item d-flex justify-content-between align-items-center" style="color: #fff;">
     Latitude
-    <span class="text" id="latIndicator">&mdash;</span>
+    <span class="text" id="latIndicator">{{#if mostRecent}}{{mostRecent.lat}}{{else}}&mdash;{{/if}}</span>
   </li>
   <li class="list-group-item d-flex justify-content-between align-items-center" style="color: #fff;">
     Longitude
-    <span class="text" id="lngIndicator">&mdash;</span>
+    <span class="text" id="lngIndicator">{{#if mostRecent}}{{mostRecent.lng}}{{else}}&mdash;{{/if}}</span>
+  </li>
+  <li class="list-group-item d-flex justify-content-between align-items-center" style="color: #fff;">
+    Ground Speed
+    <span class="text" id="groundSpeedIndicator">{{#if mostRecent}}{{mostRecent.gndSpeed}}{{else}}&mdash;{{/if}}</span>
   </li>
 </ul>
 <br>

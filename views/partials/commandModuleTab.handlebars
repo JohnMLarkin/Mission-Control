@@ -1,7 +1,7 @@
 <ul class="list-group">
   <li class="list-group-item d-flex justify-content-between align-items-center" style="color: #fff;">
     Internal Temp.
-    <span class="text" id="intTempIndicator">&mdash;</span>
+    <span class="text" id="intTempIndicator">{{#if mostRecent}}{{mostRecent.intTemp}}{{else}}&mdash;{{/if}}</span>
   </li>
 </ul>
 <div class="batteryGauge-container">

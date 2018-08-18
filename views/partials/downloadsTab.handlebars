@@ -1,0 +1,89 @@
+<br>
+<form method="post" action="/download/{{missionID}}">
+  <div class="row">
+    <div class="col-md-4">
+      <div class="card text-white mb-3">
+        <div class="card-header">
+          <h6 class="card-title">
+            Command Module fields to include
+          </h6>
+        </div>
+        <div class="card-body form-horizontal">
+          <div class="form-check">
+            <input class="form-check-input" type="checkbox" value="time" id="timeField" name="timeField">
+            <label class="form-check-label" for="timeField">
+              Time
+            </label>
+          </div>
+          <div class="form-check">
+            <input class="form-check-input" type="checkbox" value="altitude" id="altitudeField" name="altitudeField">
+            <label class="form-check-label" for="altitudeField">
+              Altitude
+            </label>
+          </div>
+          <div class="form-check">
+            <input class="form-check-input" type="checkbox" value="latlng" id="latLngField" name="latLngField">
+            <label class="form-check-label" for="latLngField">
+              Latitude and Longitude
+            </label>
+          </div>
+          <div class="form-check">
+            <input class="form-check-input" type="checkbox" value="vertVel" id="vertVelField" name="vertVelField">
+            <label class="form-check-label" for="vertVelField">
+              Vertical Velocity
+            </label>
+          </div>
+          <div class="form-check">
+            <input class="form-check-input" type="checkbox" value="gndSpeed" id="gndSpeedField" name="gndSpeedField">
+            <label class="form-check-label" for="gndSpeedField">
+              Ground Speed
+            </label>
+          </div>
+          <div class="form-check">
+            <input class="form-check-input" type="checkbox" value="heading" id="headingField" name="headingField">
+            <label class="form-check-label" for="headingField">
+              Heading
+            </label>
+          </div>
+          <div class="form-check">
+            <input class="form-check-input" type="checkbox" value="cmdBatteryVoltage" id="cmdBatteryVoltageField" name="cmdBatteryVoltageField">
+            <label class="form-check-label" for="cmdBatteryVoltageField">
+              Battery Voltage
+            </label>
+          </div>
+          <div class="form-check">
+            <input class="form-check-input" type="checkbox" value="intTemp" id="intTempField" name="intTempField">
+            <label class="form-check-label" for="intTempField">
+              Internal Temperature
+            </label>
+          </div>
+          <div class="form-check">
+            <input class="form-check-input" type="checkbox" value="extTemp" id="extTempField" name="extTempField">
+            <label class="form-check-label" for="extTempField">
+              External Temperature
+            </label>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-4">
+      <div class="card text-white mb-3">
+        <div class="card-header">
+          <h6 class="card-title">
+            Pod data to include
+          </h6>
+        </div>
+        <div class="card-body form-horizontal">
+          <p class="text-warning">Not yet implemented</p>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-md-12 text-left">
+      <button type="submit" class="btn btn-success btn-default">
+        <i class="fas fa-file-download fa-2x"></i> &nbsp; Download flight data
+      </button>
+    </div>
+  </div>
+</form>

@@ -79,7 +79,8 @@ function sbdToWaypoint(sbd, msgNum, sockets) {
                 cmdBatteryVoltage: waypoint.cmdBatteryVoltage,
                 intTemp: waypoint.intTemp,
                 extTemp: waypoint.extTemp,
-                vertVel: waypoint.vertVel
+                vertVel: waypoint.vertVel,
+                gndSpeed: waypoint.gndSpeed
               });
             }
           }

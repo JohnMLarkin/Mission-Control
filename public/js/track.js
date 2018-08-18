@@ -17,7 +17,6 @@ $(document).ready(function() {
    */
   socket.on('waypoint', (data) => {
     updateBalloonPosition(data);
-    setGPSLock(data);
     updateAltitude(data);
     setUpdateTime(data);
     setHeading(data);
@@ -25,6 +24,7 @@ $(document).ready(function() {
     updateInternalTemperature(data);
     updateExternalTemperature(data);
     setVertVel(data);
+    setGndSpeed(data);
     if (audioOn) audio.play();
   });
 
@@ -47,8 +47,9 @@ $(document).ready(function() {
  *****************************************************************************/
 function initMap() {
   map = new google.maps.Map(document.getElementById("map"), {
-    center: {lat: 47.7512633, lng: -117.427009},
-    zoom: 9
+    center: {lat: mapCenterLat, lng: mapCenterLng},
+    zoom: 14,
+    tilt: 0
   });
 
   balloonPath = new google.maps.Polyline({
@@ -116,15 +117,15 @@ function appendMyPath(pos) {
    $('#lngIndicator').text(`${lng.toFixed(5)}\xB0`);
  }
 
-function setGPSLock(data) {
-  if (data.isGPSlocked) {
-    $('#gpsLockIcon').attr("class","fas fa-lock");
-    $('#gpsLockIndicator').attr("class","list-group-item d-flex justify-content-between align-items-center list-group-item-success");
-  } else {
-    $('#gpsLockIcon').attr("class","fas fa-ban");
-    $('#gpsLockIndicator').attr("class","list-group-item d-flex justify-content-between align-items-center list-group-item-danger");
-  }
-}
+// function setGPSLock(data) {
+//   if (data.isGPSlocked) {
+//     $('#gpsLockIcon').attr("class","fas fa-lock");
+//     $('#gpsLockIndicator').attr("class","list-group-item d-flex justify-content-between align-items-center list-group-item-success");
+//   } else {
+//     $('#gpsLockIcon').attr("class","fas fa-ban");
+//     $('#gpsLockIndicator').attr("class","list-group-item d-flex justify-content-between align-items-center list-group-item-danger");
+//   }
+// }
 
 function updateAltitude(data) {
   $('#altitudeIndicator').text(data.alt.toFixed(0) + ' m');
@@ -172,7 +173,11 @@ function updateExternalTemperature(data) {
 }
 
 function setVertVel(data) {
-  $('#verticalVelocityIndicator').text(data.vertVel.toFixed(1));
+  $('#verticalVelocityIndicator').text(data.vertVel.toFixed(1) + ' m/s');
+}
+
+function setGndSpeed(data) {
+  $('#groundSpeedIndicator').text(data.gndSpeed.toFixed(1) + ' km/h');
 }
 
 /*****************************************************************************
@@ -419,6 +424,7 @@ var headingGauge = new RadialGauge({
     colorTitle: "#f5f5f5",
     animationDuration: 1500
 }).draw();
+headingGauge.value = startHeading;
 
 var batteryGauge = new LinearGauge({
     renderTo: 'batteryGauge',
@@ -474,3 +480,4 @@ var batteryGauge = new LinearGauge({
     barWidth: 8,
     barBeginCircle: false
 }).draw();
+batteryGauge.value = startBattery;

@@ -43,6 +43,8 @@ module.exports = (app) => {
 
   // Mission-related routes
   router.get('/track/:mission_id', track.index);
+  router.get('/review/:mission_id', track.review);
+  router.post('/download/:mission_id', track.download);
 
   // Launch control communication routes
   router.post('/verifyLaunchCode/:mission_id', launch_control.verifyLaunchCode);

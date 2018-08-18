@@ -6,6 +6,7 @@ const passport = require('passport'),
 const Organization = require('../models/organization'),
       Mission = require('../models/mission').Mission,
       Account = require('../models/account'),
+      WayPoint = require('../models/waypoint'),
       podDataTypes = require('../models/mission').podDataTypes,
       accessControl = require('../helpers/accessControl');
 
@@ -222,7 +223,8 @@ module.exports = {
   modifyMission(req, res) {
     if (accessControl.flightDirectorOrAdmin(req)) {
       if (req.body.selectedMission) {
-        var deleteAllowed = false;
+        var deleteMissionAllowed = false;
+        var deleteWaypointsAllowed = false;
         Mission.findById(req.body.selectedMission,
           (err, mission) => {
             if (err) {console.log(err);}
@@ -243,14 +245,21 @@ module.exports = {
                     break;
                   case 'Delete mission':
                     if (mission.status === 'planned') {
-                      deleteAllowed = true;
+                      deleteMissionAllowed = true;
                     }
                     break;
+                  case 'Remove waypoints':
+                    if (mission.status === 'planned') {
+                      deleteWaypointsAllowed = true;
+                    }
                   default:
                     console.log('Should not get here...');
                 }
-                if (deleteAllowed) {
+                if (deleteMissionAllowed) {
+                  WayPoint.deleteMany({missionObjectId: req.body.selectedMission}, function (err) {});
                   Mission.deleteOne({_id: req.body.selectedMission}, function (err) {});
+                } else if (deleteWaypointsAllowed) {
+                  WayPoint.deleteMany({missionObjectId: req.body.selectedMission}, function (err) {});
                 } else {
                   mission.save((err) => {
                     if (err) {

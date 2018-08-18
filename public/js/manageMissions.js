@@ -34,6 +34,13 @@ $(function() {
         $('#modify-description').hide();
         $('#modifyMissionButtons').show();
         break;
+      case 'Remove waypoints':
+        $('#modify-status').hide();
+        $('#modify-organization').hide();
+        $('#modify-launch-date').hide();
+        $('#modify-description').hide();
+        $('#modifyMissionButtons').show();
+        break;
       case 'Delete mission':
         $('#modify-status').hide();
         $('#modify-organization').hide();
@@ -81,18 +88,21 @@ $(document).ready(function() {
           document.getElementById('missionActionSelect').options[3].disabled = false;
           document.getElementById('missionActionSelect').options[4].disabled = false;
           document.getElementById('missionActionSelect').options[5].disabled = false;
+          document.getElementById('missionActionSelect').options[6].disabled = false;
           break;
         case 'active':
           document.getElementById('missionActionSelect').options[2].disabled = true;
           document.getElementById('missionActionSelect').options[3].disabled = true;
           document.getElementById('missionActionSelect').options[4].disabled = false;
           document.getElementById('missionActionSelect').options[5].disabled = true;
+          document.getElementById('missionActionSelect').options[6].disabled = true;
           break;
         default:
           document.getElementById('missionActionSelect').options[2].disabled = true;
           document.getElementById('missionActionSelect').options[3].disabled = true;
           document.getElementById('missionActionSelect').options[4].disabled = true;
           document.getElementById('missionActionSelect').options[5].disabled = true;
+          document.getElementById('missionActionSelect').options[6].disabled = true;
       }
     });
 } );
