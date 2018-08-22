@@ -27,8 +27,8 @@ module.exports = {
         Organization.findOne({name: {$regex: req.body.orgName}},
           (err, organization) => {
             if (err) {
-              console.log('Error on Organization.findOne query');
               console.log(err);
+              res.status(404).send(err);
             }
             if (!organization) {
               var newOrganization = new Organization({
@@ -64,7 +64,7 @@ module.exports = {
     var ViewModel = accessControl.navBarSupport(req.user);
     ViewModel.organizations = [];
     Organization.find({}, {}, {sort: {name: 1}}, (err, organizations) => {
-      if (err) {throw err};
+      if (err) {res.status(404).send(err)};
       ViewModel.organizations = organizations;
       res.render('listOrganizations', ViewModel);
     });
@@ -74,7 +74,7 @@ module.exports = {
     if (accessControl.flightDirectorOrAdmin(req)) {
       ViewModel.organizations = [];
       Organization.find({}, {}, {sort: {name: 1}}, (err, organizations) => {
-        if (err) {throw err};
+        if (err) {res.status(404).send(err)};
         ViewModel.organizations = organizations;
         ViewModel.createMissionJS = true;
         ViewModel.usesDatePicker = true;
@@ -89,7 +89,7 @@ module.exports = {
     if (accessControl.flightDirectorOrAdmin(req)) {
       Mission.find({}, {}, {sort: {missionID: -1}}, (err, missions) => {
         if (err) {
-          console.log('Error on Mission.find query');
+          res.status(404).send(err);
           console.log(err);
         }
         var newMissionID;
@@ -101,7 +101,7 @@ module.exports = {
         Organization.findOne({_id: req.body.organization},
           (err, organization) => {
             if (err) {
-              console.log('Error on Organization.findOne query');
+              res.status(404).send(err);
               console.log(err);
             }
             var newMission = new Mission({
@@ -113,11 +113,6 @@ module.exports = {
               createdByID: req.user._id
             });
             newMission.save((err, mission) => {
-              //ViewModel.mission = mission;
-              //ViewModel.organization = organization;
-              //ViewModel.formattedLaunchDate = mission.launchDate.toDateString() + ' (tentative)';
-              //ViewModel.createdByName = req.user.username;
-              //req.session.missionOverviewData = ViewModel;
               res.redirect(`/plannedOverview/${newMissionID}`);
             });
         });
@@ -125,18 +120,6 @@ module.exports = {
     } else {
       res.redirect('/login');
     }
-  },
-  missionOverviewOld(req, res) {
-    if (req.session.missionOverviewData) {
-      var ViewModel = req.session.missionOverviewData;
-      req.session.missionOverviewData = null;
-    } else {
-      var ViewModel = accessControl.navBarSupport(req.user);
-    }
-    if (!accessControl.flightDirectorOrAdmin(req)) {
-      ViewModel.mission.launchCode = null;
-    }
-    res.render('missionOverviewOld', ViewModel);
   },
   plannedOverview(req, res) {
     var ViewModel = accessControl.navBarSupport(req.user);
@@ -148,41 +131,45 @@ module.exports = {
         console.log(err);
         res.redirect('/');
       } else {
-        ViewModel.mission = mission;
-        ViewModel.formattedLaunchDate = mission.launchDate.toDateString() + ' (tentative)';
-        ViewModel.authorizedViewer = false;
-        if (req.user) {
-          if ((req.user._id == mission.createdByID) || (req.user.role == 'admin')) {
-            ViewModel.authorizedViewer = true;
-          }
-        }
-        let podData = [];
-        let n = 0;
-        for (let i = 0; i < mission.podManifest.length; i++) {
-          if (mission.podManifest[i].dataTypes.length>0) {
-            podData[n] = {};
-            podData[n].id = i+1;
-            podData[n].podDescription = mission.podManifest[i].podDescription;
-            podData[n].data = [];
-            for (let j = 0; j < mission.podManifest[i].dataTypes.length; j++) {
-              podData[n].data[j] = {};
-              podData[n].data[j].description = mission.podManifest[i].dataDescriptions[j];
-              podData[n].data[j].dataType = mission.podManifest[i].dataTypes[j];
+        if (mission) {
+          ViewModel.mission = mission;
+          ViewModel.formattedLaunchDate = mission.launchDate.toDateString() + ' (tentative)';
+          ViewModel.authorizedViewer = false;
+          if (req.user) {
+            if ((req.user._id == mission.createdByID) || (req.user.role == 'admin')) {
+              ViewModel.authorizedViewer = true;
             }
-            n++;
           }
+          let podData = [];
+          let n = 0;
+          for (let i = 0; i < mission.podManifest.length; i++) {
+            if (mission.podManifest[i].dataTypes.length>0) {
+              podData[n] = {};
+              podData[n].id = i+1;
+              podData[n].podDescription = mission.podManifest[i].podDescription;
+              podData[n].data = [];
+              for (let j = 0; j < mission.podManifest[i].dataTypes.length; j++) {
+                podData[n].data[j] = {};
+                podData[n].data[j].description = mission.podManifest[i].dataDescriptions[j];
+                podData[n].data[j].dataType = mission.podManifest[i].dataTypes[j];
+              }
+              n++;
+            }
+          }
+          ViewModel.podData = podData;
+          Organization.findById(mission.organizationID,
+            (err, organization) => {
+              if (err) {
+                console.log(err);
+                res.redirect('/');
+              } else {
+                ViewModel.organization = organization;
+                res.render('plannedOverview', ViewModel);
+            }
+          });
+        } else {
+          res.status(404).send(err);
         }
-        ViewModel.podData = podData;
-        Organization.findById(mission.organizationID,
-          (err, organization) => {
-            if (err) {
-              console.log(err);
-              res.redirect('/');
-            } else {
-              ViewModel.organization = organization;
-              res.render('plannedOverview', ViewModel);
-          }
-        });
       }
     });
   },
@@ -209,9 +196,7 @@ module.exports = {
               ViewModel.missions[i].formattedLaunchDate = missions[i].launchDate.toISOString().substring(0, 10);
               ViewModel.missions[i].orgName = orgDict[missions[i].organizationID];
               ViewModel.missions[i].createdByName = userDict[missions[i].createdByID];
-              //dictMissionDescription[String(missions[i]._id)] = missions[i].description;
             }
-            //ViewModel.dictMissionDescription = dictMissionDescription;
             ViewModel.manageMissionsJS = true;
             ViewModel.usesDatePicker = true;
             ViewModel.usesDataTable = true;

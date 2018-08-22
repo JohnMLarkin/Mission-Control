@@ -3,9 +3,6 @@ const accessControl = require('../helpers/accessControl'),
       Mission = require('../models/mission').Mission,
       Announcement = require('../models/announcement');
 
-// const homeSidebar = require('../helpers/homeSidebar'),
-//       MissionModel = require('../models').Mission;
-
 module.exports = {
   index(req, res) {
     var ViewModel = accessControl.navBarSupport(req.user);
@@ -59,16 +56,4 @@ module.exports = {
       res.redirect('/');
     }
   }
-  // index: (req, res) => {
-  //   const ViewModel = {
-  //     missions: []
-  //   };
-  //   MissionModel.find({}, {}, {sort: {timestamp: -1}}, (err, missions) => {
-  //     if (err) {throw err;}
-  //     ViewModel.missions = missions;
-  //     homeSidebar(ViewModel, (ViewModel) => {
-  //       res.render('home', ViewModel);
-  //     });
-  //   });
-  // }
 };
