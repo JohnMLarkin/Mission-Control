@@ -303,5 +303,72 @@ module.exports = {
     } else {
       res.redirect('/login');
     }
+  },
+  manageAnnouncements(req, res) {
+    var ViewModel = accessControl.navBarSupport(req.user);
+    if (accessControl.flightDirectorOrAdmin(req)) {
+      ViewModel.announcements = [];
+      Announcement.find({}, {}, {}, (err, announcements) => {
+        ViewModel.announcements = announcements;
+        for (let i=0; i<announcements.length; i++) {
+          ViewModel.announcements[i].formattedExpireDate = announcements[i].expireDate.toISOString().substring(0, 10);
+        }
+        ViewModel.manageAnnouncementsJS = true;
+        ViewModel.usesDatePicker = true;
+        ViewModel.usesDataTable = true;
+        res.render('manageAnnouncements', ViewModel);
+      });
+    } else {
+      res.redirect('/login');
+    }
+  },
+  modifyAnnouncement(req, res) {
+    if (accessControl.flightDirectorOrAdmin(req)) {
+      if (req.body.selectedAnnouncement) {
+        var deleteAnnouncementAllowed = false;
+        Announcement.findById(req.body.selectedAnnouncement,
+          (err, announcement) => {
+            if (err) {console.log(err);}
+            if (announcement) {
+              switch (req.body.announcementActionSelect) {
+                case 'Change title':
+                  announcement.title = req.body.announcementTitle;
+                  break;
+                case 'Change body':
+                  announcement.body = req.body.announcementBody;
+                  break;
+                case 'Change expires':
+                  announcement.expires = req.body.expires;
+                  break;
+                case 'Change expiration date':
+                  announcement.expireDate = req.body.expireDate;
+                  break;
+                case 'Delete announcement':
+                  deleteAnnouncementAllowed = true;
+                  break;
+                default:
+                  console.log('Should not get here...');
+              }
+              if (deleteAnnouncementAllowed) {
+                Announcement.deleteOne({_id: req.body.selectedAnnouncement}, function (err) {});
+              } else {
+                announcement.save((err) => {
+                  if (err) {
+                    console.log(err);
+                  }
+                });
+              }
+              res.redirect('/manageAnnouncements');
+            } else {
+              res.redirect('/');
+            }
+          }
+        );
+      } else {
+        res.redirect('/');
+      }
+    } else {
+      res.redirect('/login');
+    }
   }
 }

@@ -38,6 +38,8 @@ module.exports = (app) => {
   router.post('/modifyMission', planning.modifyMission);
   router.get('/createAnnouncement', planning.createAnnouncement);
   router.post('/addAnnouncement', planning.addAnnouncement);
+  router.get('/manageAnnouncements', planning.manageAnnouncements);
+  router.post('/modifyAnnouncement', planning.modifyAnnouncement);
 
   // Navigation-related routes
   router.get('/controlPanel', home.controlPanel);

@@ -1,0 +1,85 @@
+<div class="card text-white bg-secondary mb-3">
+  <div class="card-header">
+    <h3 class="card-title">
+      Manage Announcements
+    </h3>
+  </div>
+  <form method="post" action="/modifyAnnouncement">
+    <div class="card-body form-horizontal">
+      <div class="col-md-12">
+        <table id="announcementTable" class="display table-hover" style="width: 100%">
+          <thead>
+            <tr>
+              <th scope="col">Title</th>
+              <th scope="col">Body</th>
+              <th scope="col">Expires</th>
+              <th scope="col">Expiration Date</th>
+              <th scope="col">Created By</th>
+            </tr>
+          </thead>
+          <tbody>
+            <div class="form-group">
+              {{#each announcements}}
+                  <tr id={{_id}}>
+                    <td>{{title}}</td>
+                    <td>{{body}}</td>
+                    <td>{{expires}}</td>
+                    <td>{{formattedExpireDate}}</td>
+                    <td>{{createdByName}}</td>
+                  </tr>
+              {{/each}}
+            </div>
+          </tbody>
+        </table>
+      </div>
+    </div>
+    <div class="card-footer form-horizontal">
+      <div class="form-group col-md-12">
+        <input class="form-control" type="text" id="selectedAnnouncement" name="selectedAnnouncement" hidden>
+      </div>
+      <div class="form-group col-md-12 row">
+        <div class="col-md-6">
+          <label for="announcementActionSelect">Action</label>
+          <select class="form-control" id="announcementActionSelect" name="announcementActionSelect">
+            <option>None</option>
+            <option>Change title</option>
+            <option>Change body</option>
+            <option>Change expires</option>
+            <option>Change expiration date</option>
+            <option>Delete announcement</option>
+          </select>
+        </div>
+        <div class="col-md-6" id="modify-title">
+          <label class="control-label" for="announcementTitle">Title (50 character maximum)</label>
+          <input class="form-control" type="text" name="announcementTitle" autocomplete="off" maxlength="50">
+        </div>
+        <div class="col-md-6" id="modify-body">
+          <label class="control-label" for="announcementBody">Announcement</label>
+          <textarea class="form-control" rows="3" id="announcementBody" name="announcementBody"></textarea>
+        </div>
+        <div class="col-md-6" id="modify-expire">
+          <div class="form-check">
+            <input class="form-check-input" type="checkbox" value="true" name="expires" id="expiresFlag" checked>
+            <label class="form-check-label" for="expiresFlag"> Expires?</label>
+          </div>
+        </div>
+        <div class="form-group col-md-6" id="modify-expire-date">
+          <label class="control-label" for="expireDate">Expiration date</label>
+          <div class="input-group date">
+            <div class="input-group-prepend">
+              <div class="input-group-text"><i class="far fa-calendar-alt"></i></div>
+            </div>
+            <input type="text" class="form-control" name="expireDate" autocomplete="off">
+          </div>
+        </div>
+      </div>
+      <div class="form-group col-md-12 row align-items-end" id="modifyAnnouncementButtons">
+        <div class="col-md-6 text-right">
+          <button type="submit" class="btn btn-success btn-default">OK</button> &nbsp;
+          <a href="/"><button type="button" class="btn btn-danger">
+            <i class="fas fa-times"></i></button></a>
+        </div>
+      </div>
+    </div>
+  </form>
+</div>

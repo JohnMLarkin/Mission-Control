@@ -71,7 +71,8 @@ class GmailClient {
          access_type: 'offline',
          scope: this._scopes,
        });
-       opn(authUrl, {wait: false});
+      console.log('Go to :' + authUrl);
+       //opn(authUrl, {wait: false});
        const rl = readline.createInterface({
          input: process.stdin,
          output: process.stdout,

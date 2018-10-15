@@ -22,8 +22,12 @@ mongoose.connection.on('open', () => {
 })
 
 // Start the web server
-const server = app.listen(app.get('port'), () => {
-  console.log(`Local server up: http://localhost:${app.get('port')}`);
+const server = app.listen(app.get('port'), (err) => {
+  if (err) {
+    console.log(err);
+  } else {
+    console.log(`Server up on port ${app.get('port')}`);
+  }
 });
 
 /********************************************************
