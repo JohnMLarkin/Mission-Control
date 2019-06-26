@@ -12,12 +12,6 @@ const podDataTypes = {
   double: 8
 };
 
-// const PodSchema = new Schema({
-//   podDescription: String,
-//   dataDescriptions: [String],
-//   dataTypes: [String]
-// })
-
 const Mission = new Schema({
   missionID: Number,
   launchCode: String,

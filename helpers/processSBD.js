@@ -1,7 +1,7 @@
 const Mission = require('../models/mission').Mission,
       WayPoint = require('../models/waypoint'),
       GmailClient = require('../server/GmailClient'),
-      PubSub = require('@google-cloud/pubsub');
+      {PubSub} = require('@google-cloud/pubsub');
 
 const gmail = new GmailClient.GmailClient();
 const pubsub = new PubSub();

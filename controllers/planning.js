@@ -147,6 +147,7 @@ module.exports = {
               podData[n] = {};
               podData[n].id = i+1;
               podData[n].podDescription = mission.podManifest[i].podDescription;
+              podData[n].fc_id = mission.podManifest[i].fc_id;
               podData[n].data = [];
               for (let j = 0; j < mission.podManifest[i].dataTypes.length; j++) {
                 podData[n].data[j] = {};
