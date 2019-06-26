@@ -74,7 +74,20 @@
           </h6>
         </div>
         <div class="card-body form-horizontal">
-          <p class="text-warning">Not yet implemented</p>
+          {{#each podDataList}}
+          <div><p class="text-info">Pod {{id}}: {{podDescription}}</p>
+            {{#each data}}
+              <div class="form-check" style="padding-left: 2rem;">
+                <input class="form-check-input" type="checkbox" value="pod{{@../index}}_{{@index}}" id="pod{{@../index}}_{{@index}}Field" name="pod{{@../index}}_{{@index}}Field">
+                <label class="form-check-label" for="pod{{@../index}}_{{@index}}Field">{{description}}
+                </label>
+              </div>
+            {{/each}}
+          </div>
+          {{#unless @last}}
+            <hr>
+          {{/unless}}
+          {{/each}}
         </div>
       </div>
     </div>

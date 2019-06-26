@@ -1,7 +1,8 @@
 const Mission = require('../models/mission').Mission,
       WayPoint = require('../models/waypoint'),
       GmailClient = require('../server/GmailClient'),
-      {PubSub} = require('@google-cloud/pubsub');
+      {PubSub} = require('@google-cloud/pubsub'),
+      dataTypes = require('../helpers/dataTypes.js');
 
 const gmail = new GmailClient.GmailClient();
 const pubsub = new PubSub();
@@ -42,12 +43,13 @@ function sbdToWaypoint(sbd, msgNum, sockets) {
     r.intTemp = sbd.readInt16BE(23)*0.01;
     r.extTemp = sbd.readInt16BE(25)*0.01;
     if (sbd.length > 27) {
-      r.podData = Buffer.allocUnsafe(sbd.length-27);
-      sbd.copy(r.podData, 0, 27, sbd.length);
+      var rawPodData = Buffer.allocUnsafe(sbd.length-27);
+      sbd.copy(rawPodData, 0, 27, sbd.length);
     }
     Mission.findOne({missionID: r.missionID},
       (err, mission) => {
         if (err) {throw err;}
+        r.podData = process_pod_data(rawPodData, r.isPodActive, mission);
         var newWaypoint = new WayPoint({
           momsn: msgNum,
           missionObjectId: mission._id,
@@ -88,6 +90,45 @@ function sbdToWaypoint(sbd, msgNum, sockets) {
       }
     );
   }
+}
+
+function process_pod_data(rawData, activePods, mission) {
+  let podData = [];
+  let n = 0; // index for pods expected to send data
+  let byteIndex = 0;
+  for (let i = 0; i < mission.podManifest.length; i++) {
+    if (mission.podManifest[i].dataTypes.length>0) {  // Data is expected
+      podData[n] = {};
+      podData[n].id = i+1;  // Pod number is not index
+      podData[n].podDescription = mission.podManifest[i].podDescription;
+      podData[n].data = [];
+      let podPlan = [];
+      let expectedPodLength = 0;
+      for (let j = 0; j < mission.podManifest[i].dataTypes.length; j++) {
+        podPlan[j] = {};
+        podPlan[j].description = mission.podManifest[i].dataDescriptions[j];
+        podPlan[j].dataType = mission.podManifest[i].dataTypes[j];
+        expectedPodLength = expectedPodLength + dataTypes[podPlan[j].dataType].size;
+      }
+      if ((activePods[i]) && (expectedPodLength == rawData[byteIndex])) {  // Data was received
+        byteIndex++;
+        for (let j = 0; j < mission.podManifest[i].dataTypes.length; j++) {
+          podData[n].data[j] = {};
+          podData[n].data[j].description = podPlan[j].description;
+          podData[n].data[j].value = rawData[dataTypes[podPlan[j].dataType].converter](byteIndex);
+          byteIndex = byteIndex + dataTypes[podPlan[j].dataType].size;
+        }
+      } else {  // No data
+        for (let j = 0; j < mission.podManifest[i].dataTypes.length; j++) {
+          podData[n].data[j] = {};
+          podData[n].data[j].description = podPlan[j].description;
+          podData[n].data[j].value = NaN;
+        }
+      }
+      n++;
+    }
+  }
+  return podData;
 }
 
 async function checkEmail(subUpdate, sockets) {

@@ -8,7 +8,6 @@ const Organization = require('../models/organization'),
       Account = require('../models/account'),
       WayPoint = require('../models/waypoint'),
       Announcement = require('../models/announcement'),
-      podDataTypes = require('../models/mission').podDataTypes,
       accessControl = require('../helpers/accessControl');
 
 module.exports = {

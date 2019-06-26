@@ -92,6 +92,24 @@ module.exports = {
         if (mission) {
           ViewModel.missionDescription = mission.description;
           ViewModel.formattedLaunchDate = mission.launchDate.toDateString();
+          let podDataList = [];
+          let n = 0;
+          for (let i = 0; i < mission.podManifest.length; i++) {
+            if (mission.podManifest[i].dataTypes.length>0) {
+              podDataList[n] = {};
+              podDataList[n].id = i+1;
+              podDataList[n].podDescription = mission.podManifest[i].podDescription;
+              podDataList[n].fc_id = mission.podManifest[i].fc_id;
+              podDataList[n].data = [];
+              for (let j = 0; j < mission.podManifest[i].dataTypes.length; j++) {
+                podDataList[n].data[j] = {};
+                podDataList[n].data[j].description = mission.podManifest[i].dataDescriptions[j];
+                podDataList[n].data[j].dataType = mission.podManifest[i].dataTypes[j];
+              }
+              n++;
+            }
+          }
+          ViewModel.podDataList = podDataList;
           Organization.findById(mission.organizationID, (err, org) => {
             ViewModel.orgName = org.name;
             WayPoint.find({missionObjectId: mission._id}, {}, {sort: {gpsTime: 1}}, (err, waypoints) => {
@@ -134,20 +152,43 @@ module.exports = {
       } else {
         if (mission) {
           WayPoint.find({missionObjectId: mission._id}, {}, {sort: {gpsTime: 1}}, (err, waypoints) => {
-            flightData = [];
-            for (let i = 0; i < waypoints.length; i++) {
-              flightData.push({
-                Time: waypoints[i].gpsTime.toLocaleString().replace(',',''),
-                'Altitude (m)': waypoints[i].alt,
-                Latitude: waypoints[i].lat,
-                Longitude: waypoints[i].lng,
-                'Vertical Velocity (m/s)': waypoints[i].vertVel,
-                'Ground Speed (km/h)': waypoints[i].gndSpeed,
-                Heading: waypoints[i].heading,
-                'Battery Voltage (V)': waypoints[i].cmdBatteryVoltage,
-                'Internal Temperature (C)': waypoints[i].intTemp,
-                'External Temperature (C)': waypoints[i].extTemp
-              });
+            let podDataList = [];
+            let n = 0;
+            for (let i = 0; i < mission.podManifest.length; i++) {
+              if (mission.podManifest[i].dataTypes.length>0) {
+                podDataList[n] = {};
+                podDataList[n].id = i+1;
+                podDataList[n].podDescription = mission.podManifest[i].podDescription;
+                podDataList[n].fc_id = mission.podManifest[i].fc_id;
+                podDataList[n].data = [];
+                for (let j = 0; j < mission.podManifest[i].dataTypes.length; j++) {
+                  podDataList[n].data[j] = {};
+                  podDataList[n].data[j].description = mission.podManifest[i].dataDescriptions[j];
+                  podDataList[n].data[j].dataType = mission.podManifest[i].dataTypes[j];
+                }
+                n++;
+              }
+            }
+            var flightData = [];
+            for (let k = 0; k < waypoints.length; k++) {
+              let wp = {
+                Time: waypoints[k].gpsTime.toLocaleString().replace(',',''),
+                'Altitude (m)': waypoints[k].alt,
+                Latitude: waypoints[k].lat,
+                Longitude: waypoints[k].lng,
+                'Vertical Velocity (m/s)': waypoints[k].vertVel,
+                'Ground Speed (km/h)': waypoints[k].gndSpeed,
+                Heading: waypoints[k].heading,
+                'Battery Voltage (V)': waypoints[k].cmdBatteryVoltage,
+                'Internal Temperature (C)': waypoints[k].intTemp,
+                'External Temperature (C)': waypoints[k].extTemp
+              };
+              for (let i = 0; i < podDataList.length; i++) {
+                for (let j = 0; j < podDataList[i].data.length; j++) {
+                  wp[`Pod ${podDataList[i].id}: ${podDataList[i].data[j].description}`] = waypoints[k].podData[i].data[j].value;
+                }
+              }
+              flightData.push(wp);
             }
             var fields = [];
             if (req.body.timeField) fields.push('Time');
@@ -162,6 +203,12 @@ module.exports = {
             if (req.body.cmdBatteryVoltageField) fields.push('Battery Voltage (V)');
             if (req.body.intTempField) fields.push('Internal Temperature (C)');
             if (req.body.extTempField) fields.push('External Temperature (C)');
+
+            for (let i = 0; i < podDataList.length; i++) {
+              for (let j = 0; j < podDataList[i].data.length; j++) {
+                if (req.body[`pod${i}_${j}Field`]) fields.push(`Pod ${podDataList[i].id}: ${podDataList[i].data[j].description}`)
+              }
+            }
             const opts = { fields };
             const csv = json2csv(flightData, opts);
             console.log(csv);

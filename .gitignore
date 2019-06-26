@@ -1,7 +1,7 @@
 node_modules
-package-lock.json
 server/_secrets.js
 server/gmail_api_keys.json
 server/gmail_credentials.json
 gmail_credentials.json
 credentials.json
+.vscode

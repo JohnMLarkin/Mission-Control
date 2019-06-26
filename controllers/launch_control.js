@@ -1,5 +1,4 @@
-const Mission = require('../models/mission').Mission,
-      podDataTypes = require('../models/mission').podDataTypes;
+const Mission = require('../models/mission').Mission;
 
 module.exports = {
   verifyLaunchCode(req, res) {

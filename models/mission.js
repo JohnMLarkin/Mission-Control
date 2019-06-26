@@ -1,17 +1,6 @@
 const mongoose = require('mongoose'),
       Schema = mongoose.Schema;
 
-const podDataTypes = {
-  uint8: 1,
-  int8: 1,
-  uint16: 2,
-  int16: 2,
-  uint32: 4,
-  int32: 4,
-  float: 4,
-  double: 8
-};
-
 const Mission = new Schema({
   missionID: Number,
   launchCode: String,
@@ -28,6 +17,5 @@ const Mission = new Schema({
 })
 
 module.exports = {
-  'Mission': mongoose.model('Mission',Mission),
-  'podDataTypes': podDataTypes
+  'Mission': mongoose.model('Mission',Mission)
 }
