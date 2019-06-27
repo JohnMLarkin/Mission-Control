@@ -30,6 +30,24 @@ module.exports = {
         console.log(err);
       } else {
         if (mission) {
+          let podDataList = [];
+          let n = 0;
+          for (let i = 0; i < mission.podManifest.length; i++) {
+            if (mission.podManifest[i].dataTypes.length>0) {
+              podDataList[n] = {};
+              podDataList[n].id = i+1;
+              podDataList[n].podDescription = mission.podManifest[i].podDescription;
+              podDataList[n].fc_id = mission.podManifest[i].fc_id;
+              podDataList[n].data = [];
+              for (let j = 0; j < mission.podManifest[i].dataTypes.length; j++) {
+                podDataList[n].data[j] = {};
+                podDataList[n].data[j].description = mission.podManifest[i].dataDescriptions[j];
+                podDataList[n].data[j].dataType = mission.podManifest[i].dataTypes[j];
+              }
+              n++;
+            }
+          }
+          ViewModel.podDataList = podDataList;
           WayPoint.find({missionObjectId: mission._id}, {}, {sort: {gpsTime: 1}}, (err, waypoints) => {
             for (let i = 0; i < waypoints.length; i++) {
               ViewModel.pastPath.push({lat: waypoints[i].lat, lng: waypoints[i].lng});
@@ -48,6 +66,11 @@ module.exports = {
                 lng: waypoints[waypoints.length-1].lng.toFixed(5) + '\xB0',
                 intTemp: waypoints[waypoints.length-1].intTemp.toFixed(1) + '\xB0C',
                 extTemp: waypoints[waypoints.length-1].extTemp.toFixed(1) + '\xB0C',
+              }
+              for (let i = 0; i < podDataList.length; i++) {
+                for (let j = 0; j < podDataList[i].data.length; j++) {
+                  ViewModel.mostRecent[`pod${i}_${j}Value`] = waypoints[waypoints.length-1].podData[i].data[j].value;
+                }
               }
               ViewModel.mapCenterLat = waypoints[waypoints.length-1].lat;
               ViewModel.mapCenterLng = waypoints[waypoints.length-1].lng;

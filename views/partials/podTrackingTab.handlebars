@@ -1,0 +1,37 @@
+{{!-- <ul class="list-group">
+  {{#each podDataList}}
+    <li class="list-group-item list-group-item-info d-flex justify-content-between align-items-center">Pod {{id}}: {{podDescription}}</li>
+    <ul class="list-group">
+      {{#each data}}
+        <li class="list-group-item d-flex justify-content-between align-items-center" style="color: #fff;">{{description}}
+        <span class="text" id="pod{{@../index}}_{{@index}}Value">{{#if mostRecent}}?{{else}}&mdash;{{/if}}</span>
+        </li>
+      {{/each}}
+    </ul>
+  {{/each}}
+</ul> --}}
+
+<div id="accordion">
+  {{#each podDataList}}
+    <div class="card">
+      <div class="card-header" id="pod{{id}}CardHeader">
+        <h5 class="mb-0">
+          <button class="btn btn-link" data-toggle="collapse" data-target="#pod{{id}}DataCard" aria-expanded="false" aria-controls="pod{{id}}DataCard">
+          Pod {{id}}:  {{podDescription}}
+          </button>
+        </h5>
+      </div>
+      <div id="pod{{id}}DataCard" class="collapse" aria-labelledby="pod{{id}}CardHeader" data-parent="#accordion">
+        <div class="card-body">
+          <ul class="list-group">
+            {{#each data}}
+              <li class="list-group-item d-flex justify-content-between align-items-center" style="color: #fff;">{{description}}
+                <span class="text" id="pod{{@../index}}_{{@index}}Value">{{#if mostRecent}}?{{else}}&mdash;{{/if}}</span>
+              </li>
+            {{/each}}
+          </ul>
+        </div>
+      </div>
+    </div>
+  {{/each}}
+</div>

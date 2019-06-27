@@ -25,6 +25,12 @@
           </a>
         </li>
         <li class="nav-item">
+          <a class="nav-link" id="podTrack-tab" data-toggle="tab"
+              href="#podTrack" role="tab" aria-controls="podTrack"
+              aria-selected="false">Pod
+          </a>
+        </li>
+        <li class="nav-item">
           <a class="nav-link" id="settings-tab" data-toggle="tab"
               href="#settings" role="tab" aria-controls="settings"
               aria-selected="false">Settings
@@ -40,6 +46,9 @@
         </div>
         <div class="tab-pane fade" id="temperature" role="tabpanel" aria-labelledby="temperature-tab">
           {{>temperatureTab}}
+        </div>
+        <div class="tab-pane fade" id="podTrack" role="tabpanel" aria-labelledby="podTrack-tab">
+          {{>podTrackingTab}}
         </div>
         <div class="tab-pane fade" id="settings" role="tabpanel" aria-labelledby="settings-tab">
           {{>trackSettingsTab this}}
