@@ -28,8 +28,9 @@ function sbdToWaypoint(sbd, msgNum, sockets) {
     var headingSign = bitByte & 2;
     r.isPodActive = [];
     for (let i = 0; i < 6; i++) {
-      r.isPodActive[i] = bitByte & Math.pow(2,i+2);
+      r.isPodActive[i] = ((bitByte & Math.pow(2,i+2))>0);
     }
+    console.log(r.isPodActive);
     r.gpsTime = new Date();
     r.gpsTime.setTime(sbd.readInt32BE(3)*1000);
     r.lat = sbd.readInt32BE(7)/100000/60;
