@@ -67,9 +67,17 @@ module.exports = {
                 intTemp: waypoints[waypoints.length-1].intTemp.toFixed(1) + '\xB0C',
                 extTemp: waypoints[waypoints.length-1].extTemp.toFixed(1) + '\xB0C',
               }
-              for (let i = 0; i < podDataList.length; i++) {
-                for (let j = 0; j < podDataList[i].data.length; j++) {
-                  ViewModel.mostRecent[`pod${i}_${j}Value`] = waypoints[waypoints.length-1].podData[i].data[j].value;
+              if (podDataList.length == waypoints[waypoints.length-1].podData.length) {
+                for (let i = 0; i < podDataList.length; i++) {
+                  if (podDataList[i].data.length == waypoints[waypoints.length-1].podData[i].data.length) {
+                    for (let j = 0; j < podDataList[i].data.length; j++) {
+                      ViewModel.podDataList[i][j].value = waypoints[waypoints.length-1].podData[i].data[j].value;
+                    }
+                  } else {
+                    for (let j = 0; j < podDataList[i].data.length; j++) {
+                      ViewModel.podDataList[i][j].value = NaN;
+                    }
+                  }
                 }
               }
               ViewModel.mapCenterLat = waypoints[waypoints.length-1].lat;
