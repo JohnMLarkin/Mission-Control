@@ -77,11 +77,11 @@ module.exports = {
                   console.log(waypoints[waypoints.length-1].podData[i].data)
                   if (podDataList[i].data.length == waypoints[waypoints.length-1].podData[i].data.length) {
                     for (let j = 0; j < podDataList[i].data.length; j++) {
-                      ViewModel.podDataList[i][j].value = waypoints[waypoints.length-1].podData[i].data[j].value;
+                      ViewModel.podDataList[i].data[j].value = waypoints[waypoints.length-1].podData[i].data[j].value;
                     }
                   } else {
                     for (let j = 0; j < podDataList[i].data.length; j++) {
-                      ViewModel.podDataList[i][j].value = NaN;
+                      ViewModel.podDataList[i].data[j].value = NaN;
                     }
                   }
                 }
