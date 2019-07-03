@@ -71,6 +71,8 @@ module.exports = {
                 for (let i = 0; i < podDataList.length; i++) {
                   console.log(`podDataList[${i}].data = `);
                   console.log(podDataList[i].data);
+                  console.log(`waypoints[waypoints.length-1].podData[${i}] = `);
+                  console.log(waypoints[waypoints.length-1].podData[i]);
                   console.log(`waypoints[waypoints.length-1].podData[${i}].data = `);
                   console.log(waypoints[waypoints.length-1].podData[i].data)
                   if (podDataList[i].data.length == waypoints[waypoints.length-1].podData[i].data.length) {
@@ -246,7 +248,6 @@ module.exports = {
             }
             const opts = { fields };
             const csv = json2csv(flightData, opts);
-            console.log(csv);
             res.setHeader('Content-disposition', `attachment; filename=Mission_${req.params.mission_id}_data.csv`);
             res.setHeader('Content-type', 'text/csv');
             res.send(csv);

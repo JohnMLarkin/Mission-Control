@@ -30,7 +30,6 @@ function sbdToWaypoint(sbd, msgNum, sockets) {
     for (let i = 0; i < 6; i++) {
       r.isPodActive[i] = ((bitByte & Math.pow(2,i+2))>0);
     }
-    console.log(r.isPodActive);
     r.gpsTime = new Date();
     r.gpsTime.setTime(sbd.readInt32BE(3)*1000);
     r.lat = sbd.readInt32BE(7)/100000/60;
@@ -51,6 +50,7 @@ function sbdToWaypoint(sbd, msgNum, sockets) {
       (err, mission) => {
         if (err) {throw err;}
         r.podData = process_pod_data(rawPodData, r.isPodActive, mission);
+        console.log("Preparing to save waypoint with");
         console.log(r.podData[0].data);
         var newWaypoint = new WayPoint({
           momsn: msgNum,
