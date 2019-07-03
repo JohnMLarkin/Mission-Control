@@ -113,7 +113,7 @@ function process_pod_data(rawData, activePods, mission) {
         podPlan[j].dataType = mission.podManifest[i].dataTypes[j];
         expectedPodLength = expectedPodLength + dataTypes[podPlan[j].dataType].size;
       }
-      if ((activePods[i]) && (expectedPodLength == (rawData[byteIndex]+1))) {  // Data was received
+      if ((activePods[i]) && (expectedPodLength == rawData[byteIndex])) {  // Data was received
         byteIndex++;
         for (let j = 0; j < mission.podManifest[i].dataTypes.length; j++) {
           podData[n].data[j] = {};
@@ -122,8 +122,6 @@ function process_pod_data(rawData, activePods, mission) {
           byteIndex = byteIndex + dataTypes[podPlan[j].dataType].size;
         }
       } else {  // No data
-        console.log(`Expected length was ${expectedPodLength}`);
-        console.log(`Received length was ${rawData[byteIndex]+1}`);
         byteIndex++;
         for (let j = 0; j < mission.podManifest[i].dataTypes.length; j++) {
           podData[n].data[j] = {};
