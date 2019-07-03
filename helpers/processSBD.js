@@ -51,7 +51,7 @@ function sbdToWaypoint(sbd, msgNum, sockets) {
       (err, mission) => {
         if (err) {throw err;}
         r.podData = process_pod_data(rawPodData, r.isPodActive, mission);
-        console.log(r.podData);
+        console.log(r.podData[0].data);
         var newWaypoint = new WayPoint({
           momsn: msgNum,
           missionObjectId: mission._id,
@@ -122,6 +122,9 @@ function process_pod_data(rawData, activePods, mission) {
           byteIndex = byteIndex + dataTypes[podPlan[j].dataType].size;
         }
       } else {  // No data
+        console.log(`Expected length was ${expectedPodLength}`);
+        console.log(`Received length was ${rawData[byteIndex]+1}`);
+        byteIndex++;
         for (let j = 0; j < mission.podManifest[i].dataTypes.length; j++) {
           podData[n].data[j] = {};
           podData[n].data[j].description = podPlan[j].description;
