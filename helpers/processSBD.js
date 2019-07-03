@@ -50,6 +50,7 @@ function sbdToWaypoint(sbd, msgNum, sockets) {
       (err, mission) => {
         if (err) {throw err;}
         r.podData = process_pod_data(rawPodData, r.isPodActive, mission);
+        console.log(r.podData);
         var newWaypoint = new WayPoint({
           momsn: msgNum,
           missionObjectId: mission._id,
@@ -69,6 +70,7 @@ function sbdToWaypoint(sbd, msgNum, sockets) {
           podData: r.podData
         });
         newWaypoint.save((err, waypoint) => {
+          if (err) {throw err;}
           for (const s of sockets) {
             if (s.missionID == r.missionID) {
               s.emit('waypoint', {
