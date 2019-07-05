@@ -175,7 +175,7 @@ module.exports = {
   },
   manageMissions(req, res) {
     var ViewModel = accessControl.navBarSupport(req.user);
-    if (accessControl.onlyAdmin(req)) {
+    if (accessControl.flightDirectorOrAdmin(req)) {
       ViewModel.missions = [];
       ViewModel.organizations = [];
       Organization.find({}, {}, {sort: {name: 1}}, (err, organizations) => {
@@ -189,7 +189,15 @@ module.exports = {
           for (let i = 0; i < accounts.length; i++) {
             userDict[accounts[i]._id] = accounts[i].username;
           }
-          Mission.find({}, {}, {sort: {launchDate: -1}}, (err, missions) => {
+          var userSearchField;
+          if (req.user.role === 'admin') {
+            userSearchField = {};
+          } else {
+            for (let i = 0; i < accounts.length; i++) {
+              if (accounts[i].username === req.user.username) userSearchField = {createdByID: req.user.username};
+            }
+          }
+          Mission.find(userSearchField, {}, {sort: {launchDate: -1}}, (err, missions) => {
             ViewModel.missions = missions;
             dictMissionDescription = {};
             for (let i=0; i<missions.length; i++) {
