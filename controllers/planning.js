@@ -194,7 +194,7 @@ module.exports = {
             userSearchField = {};
           } else {
             for (let i = 0; i < accounts.length; i++) {
-              if (accounts[i].username === req.user.username) userSearchField = {createdByID: req.user.username};
+              if (accounts[i].username === req.user.username) userSearchField = {createdByID: accounts[i]._id};
             }
           }
           Mission.find(userSearchField, {}, {sort: {launchDate: -1}}, (err, missions) => {
