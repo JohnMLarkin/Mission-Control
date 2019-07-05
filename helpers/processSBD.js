@@ -85,7 +85,8 @@ function sbdToWaypoint(sbd, msgNum, sockets) {
                 intTemp: waypoint.intTemp,
                 extTemp: waypoint.extTemp,
                 vertVel: waypoint.vertVel,
-                gndSpeed: waypoint.gndSpeed
+                gndSpeed: waypoint.gndSpeed,
+                podData: waypoint.podData
               });
             }
           }
