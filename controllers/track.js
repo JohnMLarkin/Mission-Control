@@ -71,7 +71,11 @@ module.exports = {
                 for (let i = 0; i < podDataList.length; i++) {
                   if (podDataList[i].data.length == waypoints[waypoints.length-1].podData[i].data.length) {
                     for (let j = 0; j < podDataList[i].data.length; j++) {
-                      ViewModel.podDataList[i].data[j].value = waypoints[waypoints.length-1].podData[i].data[j].value;
+                      if ((podDataList[i].data[j].dataType == 'float') || (podDataList[i].data[j].dataType == 'double')) {
+                          ViewModel.podDataList[i].data[j].value = waypoints[waypoints.length-1].podData[i].data[j].value.toPrecision(4);
+                      } else {
+                        ViewModel.podDataList[i].data[j].value = waypoints[waypoints.length-1].podData[i].data[j].value;
+                      }
                     }
                   } else {
                     for (let j = 0; j < podDataList[i].data.length; j++) {
