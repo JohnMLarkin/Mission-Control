@@ -82,7 +82,6 @@ function sbdToWaypoint(sbd, msgNum, sockets) {
                 podDataList[i].data[j].value = "&mdash;";
               }
             }
-            }
           }
         }
         var newWaypoint = new WayPoint({
