@@ -69,12 +69,6 @@ module.exports = {
               }
               if (podDataList.length == waypoints[waypoints.length-1].podData.length) {
                 for (let i = 0; i < podDataList.length; i++) {
-                  console.log(`podDataList[${i}].data = `);
-                  console.log(podDataList[i].data);
-                  console.log(`waypoints[waypoints.length-1].podData[${i}] = `);
-                  console.log(waypoints[waypoints.length-1].podData[i]);
-                  console.log(`waypoints[waypoints.length-1].podData[${i}].data = `);
-                  console.log(waypoints[waypoints.length-1].podData[i].data)
                   if (podDataList[i].data.length == waypoints[waypoints.length-1].podData[i].data.length) {
                     for (let j = 0; j < podDataList[i].data.length; j++) {
                       ViewModel.podDataList[i].data[j].value = waypoints[waypoints.length-1].podData[i].data[j].value;
