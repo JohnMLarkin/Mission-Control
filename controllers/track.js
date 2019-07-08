@@ -79,7 +79,7 @@ module.exports = {
                     }
                   } else {
                     for (let j = 0; j < podDataList[i].data.length; j++) {
-                      ViewModel.podDataList[i].data[j].value = NaN;
+                      ViewModel.podDataList[i].data[j].value = "&mdash;";
                     }
                   }
                 }
