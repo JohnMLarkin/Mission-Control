@@ -49,9 +49,42 @@ function sbdToWaypoint(sbd, msgNum, sockets) {
     Mission.findOne({missionID: r.missionID},
       (err, mission) => {
         if (err) {throw err;}
+        let podDataList = [];
+        let n = 0;
+        for (let i = 0; i < mission.podManifest.length; i++) {
+          if (mission.podManifest[i].dataTypes.length>0) {
+            podDataList[n] = {};
+            podDataList[n].id = i+1;
+            podDataList[n].podDescription = mission.podManifest[i].podDescription;
+            podDataList[n].fc_id = mission.podManifest[i].fc_id;
+            podDataList[n].data = [];
+            for (let j = 0; j < mission.podManifest[i].dataTypes.length; j++) {
+              podDataList[n].data[j] = {};
+              podDataList[n].data[j].description = mission.podManifest[i].dataDescriptions[j];
+              podDataList[n].data[j].dataType = mission.podManifest[i].dataTypes[j];
+            }
+            n++;
+          }
+        }
         r.podData = process_pod_data(rawPodData, r.isPodActive, mission);
-        console.log("Preparing to save waypoint with");
-        console.log(r.podData[0].data);
+        if (podDataList.length == r.podData.length) {
+          for (let i = 0; i < podDataList.length; i++) {
+            if (podDataList[i].data.length == r.podData[i].data.length) {
+              for (let j = 0; j < podDataList[i].data.length; j++) {
+                if ((podDataList[i].data[j].dataType == 'float') || (podDataList[i].data[j].dataType == 'double')) {
+                    podDataList[i].data[j].value = r.podData[i].data[j].value.toPrecision(4);
+                } else {
+                  podDataList[i].data[j].value = r.podData[i].data[j].value;
+                }
+              }
+            } else {
+              for (let j = 0; j < podDataList[i].data.length; j++) {
+                podDataList[i].data[j].value = "&mdash;";
+              }
+            }
+            }
+          }
+        }
         var newWaypoint = new WayPoint({
           momsn: msgNum,
           missionObjectId: mission._id,
@@ -86,7 +119,7 @@ function sbdToWaypoint(sbd, msgNum, sockets) {
                 extTemp: waypoint.extTemp,
                 vertVel: waypoint.vertVel,
                 gndSpeed: waypoint.gndSpeed,
-                podData: waypoint.podData
+                podData: podDataList
               });
             }
           }

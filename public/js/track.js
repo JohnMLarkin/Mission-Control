@@ -25,6 +25,7 @@ $(document).ready(function() {
     updateExternalTemperature(data);
     setVertVel(data);
     setGndSpeed(data);
+    setPodData(data);
     if (audioOn) audio.play();
   });
 
@@ -178,6 +179,18 @@ function setVertVel(data) {
 
 function setGndSpeed(data) {
   $('#groundSpeedIndicator').text(data.gndSpeed.toFixed(1) + ' km/h');
+}
+
+function setPodData(data) {
+  if (data.podData.length>0) {
+    for (let i = 0; i < data.podData.length; i++) {
+      if (data.podData[i].length>0) {
+        for (let j = 0; j < data.podData[i].length; j++) {
+          $(`#pod${i}_${j}Value`).text(data.podData[i].data[j].value)
+        }
+      }
+    }
+  }
 }
 
 /*****************************************************************************
