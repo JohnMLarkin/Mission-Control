@@ -184,8 +184,8 @@ function setGndSpeed(data) {
 function setPodData(data) {
   if (data.podData.length>0) {
     for (let i = 0; i < data.podData.length; i++) {
-      if (data.podData[i].length>0) {
-        for (let j = 0; j < data.podData[i].length; j++) {
+      if (data.podData[i].data.length>0) {
+        for (let j = 0; j < data.podData[i].data.length; j++) {
           $(`#pod${i}_${j}Value`).text(data.podData[i].data[j].value)
         }
       }
