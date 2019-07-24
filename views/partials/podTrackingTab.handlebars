@@ -11,7 +11,7 @@
   {{/each}}
 </ul> --}}
 
-<div id="accordion">
+{{!-- <div id="accordion"> --}}
   {{#each podDataList}}
     <div class="card">
       <div class="card-header" id="pod{{id}}CardHeader">
@@ -21,7 +21,8 @@
           </button>
         </h5>
       </div>
-      <div id="pod{{id}}DataCard" class="collapse" aria-labelledby="pod{{id}}CardHeader" data-parent="#accordion">
+      {{!-- <div id="pod{{id}}DataCard" class="collapse" aria-labelledby="pod{{id}}CardHeader" data-parent="#accordion"> --}}
+      <div id="pod{{id}}DataCard" class="collapse" aria-labelledby="pod{{id}}CardHeader">
         <div class="card-body">
           <ul class="list-group">
             {{#each data}}
@@ -34,4 +35,4 @@
       </div>
     </div>
   {{/each}}
-</div>
+{{!-- </div> --}}
