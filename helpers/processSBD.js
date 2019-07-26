@@ -132,7 +132,7 @@ function process_pod_data(rawData, activePods, mission) {
   let podData = [];
   let n = 0; // index for pods expected to send data
   let byteIndex = 0;
-  let badData;
+  let badData = false;
   for (let i = 0; i < mission.podManifest.length; i++) {
     if (mission.podManifest[i].dataTypes.length>0) {  // Data is expected
       podData[n] = {};
@@ -147,7 +147,6 @@ function process_pod_data(rawData, activePods, mission) {
         podPlan[j].dataType = mission.podManifest[i].dataTypes[j];
         expectedPodLength = expectedPodLength + dataTypes[podPlan[j].dataType].size;
       }
-      badData = false;
       if (activePods[i]) { // Data was received
         if (expectedPodLength == rawData[byteIndex]) {  // Data is right length
           byteIndex++;
@@ -157,10 +156,12 @@ function process_pod_data(rawData, activePods, mission) {
             podData[n].data[j].value = rawData[dataTypes[podPlan[j].dataType].converter](byteIndex);
             byteIndex = byteIndex + dataTypes[podPlan[j].dataType].size;
           }
-        } else badData = true;
+        } else { // Data was received but wrong length
+          byteIndex = byteIndex + rawData[byteIndex] + 1;
+          badData = true;
+        }
       } else badData = true;
       if (badData) {  // Either not received or wrong length
-        byteIndex++;
         for (let j = 0; j < mission.podManifest[i].dataTypes.length; j++) {
           podData[n].data[j] = {};
           podData[n].data[j].description = podPlan[j].description;
